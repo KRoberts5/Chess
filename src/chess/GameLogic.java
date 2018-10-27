@@ -36,6 +36,14 @@ public class GameLogic {
             possibleMoves = this.getPossibleMoves((Pawn) p);
         if(p instanceof Rook)
             possibleMoves = this.getPossibleMoves((Rook) p);
+        if(p instanceof Bishop)
+            possibleMoves = this.getPossibleMoves((Bishop) p);
+        if(p instanceof Knight)
+            possibleMoves = this.getPossibleMoves((Knight) p);
+        if(p instanceof King)
+            possibleMoves = this.getPossibleMoves((King) p);
+        if(p instanceof Queen)
+            possibleMoves = this.getPossibleMoves((Queen) p);
         
         return possibleMoves;
     }
@@ -223,6 +231,27 @@ public class GameLogic {
 
             ++eastCount;
         }
+        
+        return possibleMoves;
+    }
+    
+    public ArrayList<Coordinate> getPossibleMoves(Bishop b){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        return possibleMoves;
+    } 
+    public ArrayList<Coordinate> getPossibleMoves(Knight k){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        return possibleMoves;
+    }
+    public ArrayList<Coordinate> getPossibleMoves(King k){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        return possibleMoves;
+    }
+    public ArrayList<Coordinate> getPossibleMoves(Queen q){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
         
         return possibleMoves;
     }
