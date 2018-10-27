@@ -1,14 +1,19 @@
 
 package chess;
+import chess.model.*;
+import chess.controller.*;
 
 
 public class Chess {
 
-    /**
-     * @param args the command line arguments
-     */
+    
+    
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        DefaultModel model = new DefaultModel();
+        
+        
     }
     
 }

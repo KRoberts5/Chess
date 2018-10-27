@@ -16,7 +16,8 @@ public class DefaultModel extends AbstractModel{
     
     
     private boolean stalemate;
-    private boolean playerWon;
+    private boolean whitePlayerWon;
+    private boolean blackPlayerWon;
     private boolean whitePlayerTurn;
     
     private BoardSpace[][] board;
@@ -30,7 +31,8 @@ public class DefaultModel extends AbstractModel{
     
     public DefaultModel(){
         stalemate = false;
-        playerWon = false;
+        whitePlayerWon = false;
+        blackPlayerWon = false;
         whitePlayerTurn = true;
         
         this.whitePlayer = new Player(WHITE);
@@ -315,6 +317,68 @@ public class DefaultModel extends AbstractModel{
         }
         
         return valid;
+    }
+    
+    public boolean checkStalemate(){
+        this.stalemate = !this.movesLeft();
+        return this.stalemate;
+    }
+    
+    public boolean checkPlayersWon(){
+
+        for(Piece p : whitePiecesOut){
+            if(p instanceof King)
+                this.blackPlayerWon = true;
+        }
+        for(Piece p: blackPiecesOut){
+            if(p instanceof King)
+                this.whitePlayerWon = true;
+        }
+        
+        return whitePlayerWon || blackPlayerWon;
+    }
+    
+    public boolean isGameOver(){
+        
+        this.checkStalemate();
+        this.checkPlayersWon();
+        
+        boolean gameOver = this.stalemate || this.whitePlayerWon || this.blackPlayerWon;
+        
+        return gameOver;
+    }
+    
+    public boolean movesLeft(){
+        boolean movesLeft = false;
+        int whiteCount = 0;
+        int blackCount = 0;
+        
+        int whitePieces = whitePiecesIn.size();
+        int blackPieces = blackPiecesIn.size();
+        
+        while(((whiteCount < whitePieces) && (blackCount < blackPieces)) && !movesLeft){
+            Piece blackPiece = blackPiecesIn.get(blackCount);
+            
+            if(whiteCount < whitePieces){
+                Piece p = whitePiecesIn.get(whiteCount);
+                ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
+            
+                if(possibleMoves.size() > 0)
+                    movesLeft = true;
+            }
+            if(blackCount < blackPieces){
+                Piece p = blackPiecesIn.get(whiteCount);
+                ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
+            
+                if(possibleMoves.size() > 0)
+                    movesLeft = true;
+            }
+            
+            ++whiteCount;
+            ++blackCount;
+        }
+        
+        return movesLeft;
     }
     
     
