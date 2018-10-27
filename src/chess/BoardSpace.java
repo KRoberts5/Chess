@@ -9,19 +9,19 @@ package chess;
  *
  * @author Brendan
  */
-public class GridSpace {
+public class BoardSpace {
     
     private boolean occupied;
     private Coordinate coordinate;
     private Piece piece;
     
-    public GridSpace(Coordinate c){
+    public BoardSpace(Coordinate c){
         this.coordinate = c;
         this.occupied = false;
         this.piece = null;
     }
     
-    public GridSpace(int x, int y){
+    public BoardSpace(int x, int y){
         this(new Coordinate(x,y));
     }
     

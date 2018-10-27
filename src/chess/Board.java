@@ -11,15 +11,15 @@ package chess;
  */
 public class Board {
     
-    private GridSpace[][] board;
+    private BoardSpace[][] board;
     
     
     public Board(){
-        board = new GridSpace[GameLogic.MAX_SQUARE][GameLogic.MAX_SQUARE];
+        board = new BoardSpace[GameLogic.MAX_SQUARE][GameLogic.MAX_SQUARE];
         
         for(int i = 0; i < GameLogic.MAX_SQUARE; ++i){
             for(int j = 0; j < GameLogic.MAX_SQUARE; ++j){
-                GridSpace space = new GridSpace(i,j);
+                BoardSpace space = new BoardSpace(i,j);
                 board[i][j] = space;
             } 
         }
@@ -43,7 +43,7 @@ public class Board {
         return valid;
     }
     
-    public GridSpace getSpace(int x, int y){
+    public BoardSpace getSpace(int x, int y){
         return board[x][y];
     }
 }
