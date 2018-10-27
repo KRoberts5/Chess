@@ -25,13 +25,24 @@ public abstract class Piece {
         this.inPlay = true;
     }
     
-    public Piece(String color, int x, int y){
-        this.color = color;
-        this.coordinate = new Coordinate(x,y);
-        
+    public Piece(String color, int x, int y){ 
+        this(color,new Coordinate(x,y));  
     }
     
-    public abstract ArrayList<Coordinate> getPossibleMoves();
+    
+    public Coordinate getCoordinate(){
+        return this.coordinate;
+    }
+    public String getColor(){
+        return this.color;
+    }
+    
+    public void setCoordinate(int x, int y){
+        this.coordinate.setCoordinate(x, y);
+    }
+    
+    
+
         
     
     
