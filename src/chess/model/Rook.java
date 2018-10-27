@@ -1,5 +1,5 @@
 
-package chess;
+package chess.model;
 
 
 public class Rook extends Piece {

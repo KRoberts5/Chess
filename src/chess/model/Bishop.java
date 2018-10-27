@@ -1,5 +1,5 @@
 
-package chess;
+package chess.model;
 
 
 public class Bishop extends Piece {

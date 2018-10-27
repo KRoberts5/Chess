@@ -1,4 +1,4 @@
-package chess;
+package chess.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
