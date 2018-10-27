@@ -28,12 +28,17 @@ public class BoardSpace {
     public boolean isOccupied(){
         return this.occupied;
     }
+    public boolean isNotOccupied(){
+        return !this.occupied;
+    }
     
-    public void occupy(){
+    public void occupy(Piece p){
         occupied = true;
+        this.piece = p;
     }
     public void unoccupy(){
         occupied = false;
+        this.piece = null;
     }
     public Coordinate getCoordinate(){
         return this.coordinate;

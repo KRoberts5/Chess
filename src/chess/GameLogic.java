@@ -25,7 +25,9 @@ public class GameLogic {
     
     private boolean staleMate;
     
-    private Board board;
+    private BoardSpace[][] board;
+    private Player whitePlayer;
+    private Player blackPlayer;
     
     public ArrayList<Coordinate> getPossibleMoves(Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
@@ -47,23 +49,23 @@ public class GameLogic {
 
         if(color.equals(GameLogic.WHITE)){
             
-            if(board.validSpace(currentX, currentY - 1)){
-                if(board.spaceNotOccupied(currentX, currentY - 1)){
+            if(this.validSpace(currentX, currentY - 1)){
+                if(board[currentX][currentY - 1].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY - 1);
                     possibleMoves.add(c);
                 }
             }
-            if(board.validSpace(currentX - 1, currentY - 1)){
-                if(board.spaceOccupied(currentX - 1, currentY - 1)){
-                    if(board.getSpace(currentX - 1, currentY - 1).getPiece().getColor().equals(BLACK)){
+            if(this.validSpace(currentX - 1, currentY - 1)){
+                if(board[currentX - 1][currentY - 1].isOccupied()){
+                    if(board[currentX - 1][currentY - 1].getPiece().getColor().equals(BLACK)){
                         Coordinate c = new Coordinate(currentX - 1, currentY - 1);
                         possibleMoves.add(c);
                     }
                 }
             }
-            if(board.validSpace(currentX + 1, currentY - 1)){
-                if(board.spaceOccupied(currentX + 1, currentY - 1)){
-                    if(board.getSpace(currentX + 1, currentY - 1).getPiece().getColor().equals(BLACK)){
+            if(this.validSpace(currentX + 1, currentY - 1)){
+                if(board[currentX + 1][currentY - 1].isOccupied()){
+                    if(board[currentX + 1][currentY - 1].getPiece().getColor().equals(BLACK)){
                         Coordinate c = new Coordinate(currentX + 1, currentY - 1);
                         possibleMoves.add(c);
                     }
@@ -71,8 +73,8 @@ public class GameLogic {
             }
             
             if(p.unmoved()){
-                if((board.validSpace(currentX, currentY - 1)) && (board.validSpace(currentX, currentY - 2))){
-                    if((board.spaceNotOccupied(currentX, currentY - 1)) && (board.spaceNotOccupied(currentX, currentY - 2))){
+                if((this.validSpace(currentX, currentY - 1)) && (this.validSpace(currentX, currentY - 2))){
+                    if((board[currentX][currentY - 1].isNotOccupied()) && (board[currentX][currentY - 2].isNotOccupied())){
                         Coordinate c = new Coordinate(currentX, currentY - 2);
                         possibleMoves.add(c);
                     }
@@ -81,23 +83,23 @@ public class GameLogic {
             
         }
         else{
-            if(board.validSpace(currentX, currentY + 1)){
-                if(board.spaceNotOccupied(currentX, currentY + 1)){
+            if(this.validSpace(currentX, currentY + 1)){
+                if(board[currentX][currentY + 1].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + 1);
                     possibleMoves.add(c);
                 }
             }
-            if(board.validSpace(currentX - 1, currentY + 1)){
-                if(board.spaceOccupied(currentX - 1, currentY + 1)){
-                    if(board.getSpace(currentX - 1, currentY + 1).getPiece().getColor().equals(WHITE)){
+            if(this.validSpace(currentX - 1, currentY + 1)){
+                if(board[currentX - 1][currentY + 1].isOccupied()){
+                    if(board[currentX - 1][currentY + 1].getPiece().getColor().equals(WHITE)){
                         Coordinate c = new Coordinate(currentX - 1, currentY + 1);
                         possibleMoves.add(c);
                     }
                 }
             }
-            if(board.validSpace(currentX + 1, currentY + 1)){
-                if(board.spaceOccupied(currentX + 1, currentY + 1)){
-                    if(board.getSpace(currentX + 1, currentY + 1).getPiece().getColor().equals(WHITE)){
+            if(this.validSpace(currentX + 1, currentY + 1)){
+                if(board[currentX +1][currentY + 1].isOccupied()){
+                    if(board[currentX +1][currentY + 1].getPiece().getColor().equals(WHITE)){
                         Coordinate c = new Coordinate(currentX + 1, currentY + 1);
                         possibleMoves.add(c);
                     }
@@ -105,8 +107,8 @@ public class GameLogic {
             }
             
             if(p.unmoved()){
-                if((board.validSpace(currentX, currentY + 1)) && (board.validSpace(currentX, currentY + 2))){
-                    if((board.spaceNotOccupied(currentX, currentY + 1)) && (board.spaceNotOccupied(currentX, currentY + 2))){
+                if((this.validSpace(currentX, currentY + 1)) && (this.validSpace(currentX, currentY + 2))){
+                    if((board[currentX][currentY + 1].isNotOccupied()) && (board[currentX][currentY + 2].isNotOccupied())){
                         Coordinate c = new Coordinate(currentX, currentY + 2);
                         possibleMoves.add(c);
                     }
@@ -140,13 +142,13 @@ public class GameLogic {
         while(northSearch){
             yMod = -1*northCount;
 
-            if(board.validSpace(currentX, currentY + yMod)){
-                if(board.spaceNotOccupied(currentX, currentY + yMod)){
+            if(this.validSpace(currentX, currentY + yMod)){
+                if(board[currentX][currentY + yMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board.getSpace(currentX, currentY + yMod).getPiece().getColor().equals(color)){
+                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -161,13 +163,13 @@ public class GameLogic {
         while(southSearch){
             yMod = 1*southCount;
 
-            if(board.validSpace(currentX, currentY + yMod)){
-                if(board.spaceNotOccupied(currentX, currentY + yMod)){
+            if(this.validSpace(currentX, currentY + yMod)){
+                if(board[currentX][currentY + yMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board.getSpace(currentX, currentY + yMod).getPiece().getColor().equals(color)){
+                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -182,13 +184,13 @@ public class GameLogic {
         while(westSearch){
             xMod = -1*westCount;
 
-            if(board.validSpace(currentX + xMod, currentY)){
-                if(board.spaceNotOccupied(currentX + xMod, currentY)){
+            if(this.validSpace(currentX + xMod, currentY)){
+                if(board[currentX + xMod][currentY].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board.getSpace(currentX + xMod, currentY).getPiece().getColor().equals(color)){
+                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -203,13 +205,13 @@ public class GameLogic {
         while(eastSearch){
             xMod = 1*eastCount;
 
-            if(board.validSpace(currentX + xMod, currentY)){
-                if(board.spaceNotOccupied(currentX + xMod, currentY)){
+            if(this.validSpace(currentX + xMod, currentY)){
+                if(board[currentX + xMod][currentY].isNotOccupied()){
                      Coordinate c = new Coordinate(currentX + xMod, currentY);
                      possibleMoves.add(c);
                 }
                 else{
-                    if(!board.getSpace(currentX + xMod, currentY).getPiece().getColor().equals(color)){
+                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -223,6 +225,17 @@ public class GameLogic {
         }
         
         return possibleMoves;
+    }
+    
+    public boolean validSpace(int x, int y){
+        boolean valid = false;
+        
+        if((x >= GameLogic.MIN_SQUARE) && (x < GameLogic.MAX_SQUARE)){
+            if((y >= GameLogic.MIN_SQUARE) && (y < GameLogic.MAX_SQUARE))
+                valid = true;
+        }
+        
+        return valid;
     }
     
     
