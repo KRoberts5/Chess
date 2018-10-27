@@ -15,6 +15,10 @@ public class GameLogic {
     
     public static final int MAX_SQUARE = 8;
     public static final int MIN_SQUARE = 0;
+    public static final int INIT_WHITE_ROW_MIN = 6;
+    public static final int INIT_WHITE_ROW_MAX = 8;
+    public static final int INIT_BLACK_ROW_MIN = 0;
+    public static final int INIT_BLACK_ROW_MAX = 2;
     public static final String WHITE = "WHITE";
     public static final String BLACK = "BLACK";
     
