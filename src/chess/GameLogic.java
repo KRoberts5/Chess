@@ -12,6 +12,8 @@ package chess;
 public class GameLogic {
     
     public static final int MAX_SQUARES = 8;
+    public static final String WHITE = "WHITE";
+    public static final String BLACK = "BLACK";
     
     
 }
