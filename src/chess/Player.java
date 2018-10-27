@@ -13,15 +13,15 @@ public class Player {
     
     public Player(String color){
         this.color = color;
-        if(color.equals(GameLogic.WHITE))
+        if(color.equals(DefaultModel.WHITE))
             this.initializeWhitePieces();
         else
             this.initializeBlackPieces();
     }
     private void initializeWhitePieces(){
-        for(int i = GameLogic.INIT_WHITE_ROW_MIN; i < GameLogic.INIT_WHITE_ROW_MAX; ++i){
-            for(int j = 0; j < GameLogic.MAX_SQUARE; ++j){
-                if(i == GameLogic.INIT_WHITE_ROW_MIN)
+        for(int i = DefaultModel.INIT_WHITE_ROW_MIN; i < DefaultModel.INIT_WHITE_ROW_MAX; ++i){
+            for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
+                if(i == DefaultModel.INIT_WHITE_ROW_MIN)
                     inPlayPieces.add(new Pawn(this.color,i,j));
                 else{
                     if((j == 0) || (j == 7))
@@ -40,9 +40,9 @@ public class Player {
         }
     }
     private void initializeBlackPieces(){
-        for(int i = GameLogic.INIT_BLACK_ROW_MIN; i < GameLogic.INIT_BLACK_ROW_MAX; ++i){
-            for(int j = 0; j < GameLogic.MAX_SQUARE; ++j){
-                if(i == GameLogic.INIT_BLACK_ROW_MIN)
+        for(int i = DefaultModel.INIT_BLACK_ROW_MIN; i < DefaultModel.INIT_BLACK_ROW_MAX; ++i){
+            for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
+                if(i == DefaultModel.INIT_BLACK_ROW_MIN)
                     inPlayPieces.add(new Pawn(this.color,i,j));
                 else{
                     if((j == 0) || (j == 7))
