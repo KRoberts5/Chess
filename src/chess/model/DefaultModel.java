@@ -81,6 +81,35 @@ public class DefaultModel extends AbstractModel{
         }
     }
     
+    public void movePiece(Piece p, Coordinate c){
+        int x = c.getX();
+        int y = c.getY();
+        
+        this.movePiece(p, x, y);
+    }
+    
+    public void movePiece(Piece p, int x, int y){
+        int prevX = p.getCoordinate().getX();
+        int prevY = p.getCoordinate().getY();
+        
+        board[prevX][prevY].unoccupy();
+        if(board[x][y].isOccupied()){
+            Piece capturedPiece = board[x][y].getPiece();
+            capturedPiece.capture();
+            if(capturedPiece.getColor().equals(WHITE)){
+                whitePiecesIn.remove(capturedPiece);
+                whitePiecesOut.add(capturedPiece);            
+            }
+                
+            else{
+                blackPiecesIn.remove(capturedPiece);
+                blackPiecesOut.add(capturedPiece);
+            }
+            p.setCoordinate(x, y);
+            board[x][y].occupy(p);
+        }
+    }
+    
     public ArrayList<Coordinate> getPossibleMoves(Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
@@ -289,6 +318,112 @@ public class DefaultModel extends AbstractModel{
     
     public ArrayList<Coordinate> getPossibleMoves(Bishop b){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        String color = b.getColor();
+        int currentX = b.getCoordinate().getX();
+        int currentY = b.getCoordinate().getY();
+        int xMod = 1;
+        int yMod = 1;
+        
+        boolean northWestSearch = true;
+        boolean northEastSearch = true;
+        boolean southWestSearch = true;
+        boolean southEastSearch = true;
+        
+        int northWestCount = 1;
+        int northEastCount = 1;
+        int southWestCount = 1;
+        int southEastCount = 1;
+        
+        while(northWestSearch){
+            xMod = -1*northWestCount;
+            yMod = -1*northWestCount;
+            
+            if(this.validSpace(currentX + xMod, currentY + yMod)){
+                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                    Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                    possibleMoves.add(c);
+                }
+                else{
+                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                        Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                        possibleMoves.add(c);
+                    }
+                    northWestSearch = false;
+                }
+            }
+            else
+                northWestSearch = false;
+            
+            ++northWestCount;
+        }
+        
+        while(northEastSearch){
+            xMod = northEastCount;
+            yMod = -1*northEastCount;
+            
+            if(this.validSpace(currentX + xMod, currentY + yMod)){
+                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                    Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                    possibleMoves.add(c);
+                }
+                else{
+                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                        Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                        possibleMoves.add(c);
+                    }
+                    northEastSearch = false;
+                }
+            }
+            else
+                northEastSearch = false;
+            ++northEastCount;
+        }
+        
+        while(southWestSearch){
+            xMod = -1*southWestCount;
+            yMod = southWestCount;
+            
+            if(this.validSpace(currentX +xMod, currentY + yMod)){
+                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                    Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
+                    possibleMoves.add(c);
+                }
+                else{
+                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                        Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
+                        possibleMoves.add(c);
+                    }
+                    southWestSearch = false;
+                }
+            }
+            else
+                southWestSearch = false;
+            
+            ++southWestCount;
+        }
+        while(southEastSearch){
+            xMod = southEastCount;
+            yMod = southEastCount;
+            
+            if(this.validSpace(currentX + xMod, currentY + yMod)){
+                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                    Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                    possibleMoves.add(c);
+                }
+                else{
+                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                        Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
+                        possibleMoves.add(c);
+                    }
+                    southEastSearch = false;
+                }
+            }
+            else
+                southEastSearch = false;
+            
+            ++southEastCount;
+        }
         
         return possibleMoves;
     } 

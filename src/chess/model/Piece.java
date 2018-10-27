@@ -32,6 +32,9 @@ public abstract class Piece {
     public void setCoordinate(int x, int y){
         this.coordinate.setCoordinate(x, y);
     }
+    public void capture(){
+        inPlay = false;
+    }
     
     
 
