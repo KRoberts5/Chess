@@ -67,4 +67,8 @@ public class Player {
             }
         }
     }
+    
+    public ArrayList<Piece> getInPlayPieces(){
+        return this.inPlayPieces;
+    }
 }

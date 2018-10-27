@@ -29,6 +29,58 @@ public class GameLogic {
     private Player whitePlayer;
     private Player blackPlayer;
     
+    private ArrayList<Piece> whitePiecesIn;
+    private ArrayList<Piece> whitePiecesOut;
+    private ArrayList<Piece> blackPiecesIn;
+    private ArrayList<Piece> blackPiecesOut;
+    
+    public GameLogic(){
+        this.whitePlayer = new Player(WHITE);
+        this.blackPlayer = new Player(BLACK);
+        
+        whitePiecesIn = whitePlayer.getInPlayPieces();
+        whitePiecesOut = new ArrayList();
+        blackPiecesIn = blackPlayer.getInPlayPieces();
+        blackPiecesOut = new ArrayList();
+        
+        this.initBoard();
+        
+    }
+    
+    private void initBoard(){
+        board = new BoardSpace[MAX_SQUARE][MAX_SQUARE];
+        
+        for(int i = 0; i < MAX_SQUARE; ++i){
+            for(int j = 0; j < MAX_SQUARE; ++j){
+                board[i][j] = new BoardSpace(i,j);
+            }
+        }
+        
+        for(Piece p: whitePiecesIn){
+            Coordinate pieceCoord = p.getCoordinate();
+            
+            for(int i = INIT_WHITE_ROW_MIN; i < INIT_WHITE_ROW_MAX; ++i){
+                for(int j = 0; j < MAX_SQUARE; ++j){
+                    Coordinate boardCoord = board[i][j].getCoordinate();
+                    
+                    if(boardCoord.equals(pieceCoord))
+                        board[i][j].occupy(p);
+                }
+            }
+        }
+        for(Piece p : blackPiecesIn){
+            Coordinate pieceCoord = p.getCoordinate();
+            for(int i = INIT_BLACK_ROW_MIN; i < INIT_BLACK_ROW_MAX; ++i){
+                for(int j = 0; j < MAX_SQUARE; ++j){
+                    Coordinate boardCoord = board[i][j].getCoordinate();
+                    
+                    if(boardCoord.equals(pieceCoord))
+                        board[i][j].occupy(p);
+                }
+            }
+        }
+    }
+    
     public ArrayList<Coordinate> getPossibleMoves(Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
