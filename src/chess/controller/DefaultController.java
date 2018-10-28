@@ -11,6 +11,11 @@ import chess.controller.AbstractController;
  *
  * @author Brendan
  */
+
+
 public class DefaultController extends AbstractController {
-    
+    public static final String UNOCCUPY_SPACE = "UnoccupySpace";
+    public static final String OCCUPY_SPACE = "OccupySpace";
+    public static final String CAPTURE_WHITE_PIECE = "CaptureWhitePiece";
+    public static final String CAPTURE_BLACK_PIECE = "CaptureBlackPiece";
 }
