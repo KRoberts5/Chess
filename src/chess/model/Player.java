@@ -55,4 +55,8 @@ public class Player {
     public ArrayList<Piece> getInPlayPieces(){
         return this.inPlayPieces;
     }
+    public void capturePiece(Piece p){
+        inPlayPieces.remove(p);
+        capturedPieces.add(p);
+    }
 }

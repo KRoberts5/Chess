@@ -94,16 +94,52 @@ public class DefaultModel extends AbstractModel{
         whitePossibleMoves = new HashMap();
         for(Piece p: whitePiecesIn){
             String name = p.getName();
-            ArrayList<Coordinate> moves = this.getPossibleMoves(p);
+            ArrayList<Coordinate> moves = this.possibleMoves(p);
             whitePossibleMoves.put(name, moves);
         }
         
         blackPossibleMoves = new HashMap();
         for(Piece p : blackPiecesIn){
             String name = p.getName();
-            ArrayList<Coordinate> moves = this.getPossibleMoves(p);
+            ArrayList<Coordinate> moves = this.possibleMoves(p);
             blackPossibleMoves.put(name, moves);
         }
+    }
+    private void updatePossibleMoves(Piece p){
+        ArrayList<Coordinate> moves = new ArrayList();
+        
+        String name = p.getName();
+        String color = p.getColor();
+        if(color.equals(WHITE)){
+            whitePossibleMoves.remove(name);
+            moves = this.possibleMoves(p);
+            whitePossibleMoves.put(name, moves);
+        }
+        else{
+            blackPossibleMoves.remove(name);
+            moves = this.possibleMoves(p);
+            blackPossibleMoves.put(name, moves);
+        }
+        
+    }
+    public ArrayList<Coordinate> getPossibleMoves(Piece p){
+        ArrayList<Coordinate> moves = new ArrayList();
+        
+        String name = p.getName();
+        String color = p.getColor();
+        
+        if(color.equals(WHITE))
+            moves = (ArrayList<Coordinate>)whitePossibleMoves.get(name).clone();
+        else
+            moves = (ArrayList<Coordinate>)blackPossibleMoves.get(name).clone();
+        
+        return moves;
+    }
+    public ArrayList<Coordinate> getPossibleMoves(Coordinate c){
+        int x = c.getX();
+        int y = c.getY();
+        
+        return this.getPossibleMoves(board[x][y].getPiece());
     }
     public void setGameType(String gameType){
         if(gameType.equals(pvp))
@@ -134,41 +170,50 @@ public class DefaultModel extends AbstractModel{
         board[prevX][prevY].unoccupy();
         if(board[x][y].isOccupied()){
             Piece capturedPiece = board[x][y].getPiece();
-            capturedPiece.capture();
-            if(capturedPiece.getColor().equals(WHITE)){
-                whitePiecesIn.remove(capturedPiece);
-                whitePiecesOut.add(capturedPiece);            
-            }
-                
-            else{
-                blackPiecesIn.remove(capturedPiece);
-                blackPiecesOut.add(capturedPiece);
-            }
-            p.setCoordinate(x, y);
-            board[x][y].occupy(p);
+            this.capturePiece(capturedPiece);  
         }
+        p.setCoordinate(x, y);
+        board[x][y].occupy(p);
+        this.updatePossibleMoves(p);
     }
     
-    public ArrayList<Coordinate> getPossibleMoves(Piece p){
+    public void capturePiece(Piece p){
+        String name = p.getName();
+        String color = p.getColor();
+        p.capture();
+        
+        if(color.equals(WHITE)){
+            whitePiecesIn.remove(p);
+            whitePossibleMoves.remove(name);
+            whitePiecesOut.add(p);
+            whitePlayer.capturePiece(p);
+        }
+        else{
+            blackPiecesIn.remove(p);
+            blackPossibleMoves.remove(name);
+            blackPiecesOut.add(p);
+            blackPlayer.capturePiece(p);
+        }
+    }
+    public ArrayList<Coordinate> possibleMoves(Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
         if(p instanceof Pawn)
-            possibleMoves = this.getPossibleMoves((Pawn) p);
+            possibleMoves = this.possibleMoves((Pawn) p);
         if(p instanceof Rook)
-            possibleMoves = this.getPossibleMoves((Rook) p);
+            possibleMoves = this.possibleMoves((Rook) p);
         if(p instanceof Bishop)
-            possibleMoves = this.getPossibleMoves((Bishop) p);
+            possibleMoves = this.possibleMoves((Bishop) p);
         if(p instanceof Knight)
-            possibleMoves = this.getPossibleMoves((Knight) p);
+            possibleMoves = this.possibleMoves((Knight) p);
         if(p instanceof King)
-            possibleMoves = this.getPossibleMoves((King) p);
+            possibleMoves = this.possibleMoves((King) p);
         if(p instanceof Queen)
-            possibleMoves = this.getPossibleMoves((Queen) p);
+            possibleMoves = this.possibleMoves((Queen) p);
         
         return possibleMoves;
     }
-    
-    public ArrayList<Coordinate> getPossibleMoves(Pawn p){
+    public ArrayList<Coordinate> possibleMoves(Pawn p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
         String color = p.getColor();
@@ -246,8 +291,7 @@ public class DefaultModel extends AbstractModel{
         
         return possibleMoves;
     }
-    
-    public ArrayList<Coordinate> getPossibleMoves(Rook r){
+    public ArrayList<Coordinate> possibleMoves(Rook r){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
         String color = r.getColor();
@@ -354,8 +398,7 @@ public class DefaultModel extends AbstractModel{
         
         return possibleMoves;
     }
-    
-    public ArrayList<Coordinate> getPossibleMoves(Bishop b){
+    public ArrayList<Coordinate> possibleMoves(Bishop b){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
         String color = b.getColor();
@@ -466,17 +509,17 @@ public class DefaultModel extends AbstractModel{
         
         return possibleMoves;
     } 
-    public ArrayList<Coordinate> getPossibleMoves(Knight k){
+    public ArrayList<Coordinate> possibleMoves(Knight k){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
         return possibleMoves;
     }
-    public ArrayList<Coordinate> getPossibleMoves(King k){
+    public ArrayList<Coordinate> possibleMoves(King k){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
         return possibleMoves;
     }
-    public ArrayList<Coordinate> getPossibleMoves(Queen q){
+    public ArrayList<Coordinate> possibleMoves(Queen q){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
         String color = q.getColor();
@@ -682,7 +725,6 @@ public class DefaultModel extends AbstractModel{
         
         return possibleMoves;
     }
-    
     public boolean validSpace(int x, int y){
         boolean valid = false;
         
@@ -693,12 +735,10 @@ public class DefaultModel extends AbstractModel{
         
         return valid;
     }
-    
     public boolean checkStalemate(){
         this.stalemate = !this.movesLeft();
         return this.stalemate;
     }
-    
     public boolean checkPlayersWon(){
 
         for(Piece p : whitePiecesOut){
@@ -712,7 +752,6 @@ public class DefaultModel extends AbstractModel{
         
         return whitePlayerWon || blackPlayerWon;
     }
-    
     public boolean isGameOver(){
         
         this.checkStalemate();
@@ -722,7 +761,6 @@ public class DefaultModel extends AbstractModel{
         
         return gameOver;
     }
-    
     public boolean movesLeft(){
         boolean movesLeft = false;
         int whiteCount = 0;
@@ -755,7 +793,6 @@ public class DefaultModel extends AbstractModel{
         
         return movesLeft;
     }
-    
     public static double getDistance(Coordinate p1, Coordinate p2){
         double distance = 0;
         int squared = 2;
