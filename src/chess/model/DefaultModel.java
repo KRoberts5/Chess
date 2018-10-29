@@ -3,6 +3,7 @@ package chess.model;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.lang.Math;
 public class DefaultModel extends AbstractModel{
     
@@ -20,6 +21,10 @@ public class DefaultModel extends AbstractModel{
     private boolean whitePlayerWon;
     private boolean blackPlayerWon;
     private boolean whitePlayerTurn;
+    private boolean pvp;
+    
+    private String PVP = "PVP";
+    
     
     private BoardSpace[][] board;
     private Player whitePlayer;
@@ -27,24 +32,28 @@ public class DefaultModel extends AbstractModel{
     
     private ArrayList<Piece> whitePiecesIn;
     private ArrayList<Piece> whitePiecesOut;
+    private HashMap<String,ArrayList<Coordinate>> whitePossibleMoves;
     private ArrayList<Piece> blackPiecesIn;
     private ArrayList<Piece> blackPiecesOut;
+    private HashMap<String,ArrayList<Coordinate>> blackPossibleMoves;
     
     public DefaultModel(){
         stalemate = false;
         whitePlayerWon = false;
         blackPlayerWon = false;
         whitePlayerTurn = true;
+        pvp = true;
         
         this.whitePlayer = new Player(WHITE);
         this.blackPlayer = new Player(BLACK);
         
-        whitePiecesIn = whitePlayer.getInPlayPieces();
+        whitePiecesIn =(ArrayList<Piece>) whitePlayer.getInPlayPieces().clone();
         whitePiecesOut = new ArrayList();
-        blackPiecesIn = blackPlayer.getInPlayPieces();
+        blackPiecesIn = (ArrayList<Piece>) blackPlayer.getInPlayPieces().clone();
         blackPiecesOut = new ArrayList();
         
         this.initBoard();
+        this.initStartingPossibleMoves();
         
     }
     
@@ -80,6 +89,35 @@ public class DefaultModel extends AbstractModel{
                 }
             }
         }
+    }
+    private void initStartingPossibleMoves(){
+        whitePossibleMoves = new HashMap();
+        for(Piece p: whitePiecesIn){
+            String name = p.getName();
+            ArrayList<Coordinate> moves = this.getPossibleMoves(p);
+            whitePossibleMoves.put(name, moves);
+        }
+        
+        blackPossibleMoves = new HashMap();
+        for(Piece p : blackPiecesIn){
+            String name = p.getName();
+            ArrayList<Coordinate> moves = this.getPossibleMoves(p);
+            blackPossibleMoves.put(name, moves);
+        }
+    }
+    public void setGameType(String gameType){
+        if(gameType.equals(pvp))
+            pvp = true;
+        else
+            pvp = false;
+    }
+    
+    public void moveChosen(Coordinate oldSpace, Coordinate newSpace){
+        int oldX = oldSpace.getX();
+        int oldY = oldSpace.getY();
+        
+        Piece p = board[oldX][oldY].getPiece();
+        this.movePiece(p, newSpace);
     }
     
     public void movePiece(Piece p, Coordinate c){

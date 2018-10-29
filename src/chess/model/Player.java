@@ -13,49 +13,40 @@ public class Player {
     
     public Player(String color){
         this.color = color;
-        if(color.equals(DefaultModel.WHITE))
-            this.initializeWhitePieces();
-        else
-            this.initializeBlackPieces();
+        inPlayPieces = new ArrayList();
+        capturedPieces = new ArrayList();
+        this.initializePieces();
     }
-    private void initializeWhitePieces(){
-        for(int i = DefaultModel.INIT_WHITE_ROW_MIN; i < DefaultModel.INIT_WHITE_ROW_MAX; ++i){
-            for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
-                if(i == DefaultModel.INIT_WHITE_ROW_MIN)
-                    inPlayPieces.add(new Pawn(this.color,i,j));
-                else{
-                    if((j == 0) || (j == 7))
-                        inPlayPieces.add(new Rook(this.color,i,j));
-                    else if((j == 1) || (j == 6))
-                        inPlayPieces.add(new Bishop(this.color,i,j));
-                    else if((j == 2) || (j == 5))
-                        inPlayPieces.add(new Bishop(this.color,i,j));
-                    else if(j == 3)
-                        inPlayPieces.add(new King(this.color,i,j));
-                    else if(j == 4)
-                        inPlayPieces.add(new Queen(this.color,i,j));
-                    
-                }
-            }
+
+    private void initializePieces(){
+
+        int rowMin = 0;
+        int rowMax = 0;
+        if(this.color.equals(DefaultModel.WHITE)){
+            rowMin = DefaultModel.INIT_BLACK_ROW_MIN;
+            rowMax = DefaultModel.INIT_WHITE_ROW_MAX;
         }
-    }
-    private void initializeBlackPieces(){
-        for(int i = DefaultModel.INIT_BLACK_ROW_MIN; i < DefaultModel.INIT_BLACK_ROW_MAX; ++i){
+        else{
+            rowMin = DefaultModel.INIT_BLACK_ROW_MIN;
+            rowMax = DefaultModel.INIT_BLACK_ROW_MAX;
+        }
+        
+        for(int i = rowMin; i < rowMax; ++i){
             for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
-                if(i == DefaultModel.INIT_BLACK_ROW_MIN)
-                    inPlayPieces.add(new Pawn(this.color,i,j));
+                if(i == rowMin)
+                    inPlayPieces.add(new Pawn(this.color,(this.color + (j+1)),i,j));
                 else{
+                    String name = this.color + 2*(j+1);
                     if((j == 0) || (j == 7))
-                        inPlayPieces.add(new Rook(this.color,i,j));
+                        inPlayPieces.add(new Rook(this.color,name,i,j));
                     else if((j == 1) || (j == 6))
-                        inPlayPieces.add(new Bishop(this.color,i,j));
+                        inPlayPieces.add(new Bishop(this.color,name,i,j));
                     else if((j == 2) || (j == 5))
-                        inPlayPieces.add(new Bishop(this.color,i,j));
+                        inPlayPieces.add(new Bishop(this.color,name,i,j));
                     else if(j == 3)
-                        inPlayPieces.add(new King(this.color,i,j));
+                        inPlayPieces.add(new King(this.color,name,i,j));
                     else if(j == 4)
-                        inPlayPieces.add(new Queen(this.color,i,j));
-                    
+                        inPlayPieces.add(new Queen(this.color,name,i,j));
                 }
             }
         }

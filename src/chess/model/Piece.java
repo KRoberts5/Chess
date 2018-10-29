@@ -10,15 +10,17 @@ public abstract class Piece {
     private String color;
     private boolean inPlay;
     private Coordinate coordinate;
+    private String name;
     
-    public Piece(String color, Coordinate c){
+    public Piece(String color, String name, Coordinate c){
         this.color = color;
+        this.name = name;
         this.coordinate = c;
         this.inPlay = true;
     }
     
-    public Piece(String color, int x, int y){ 
-        this(color,new Coordinate(x,y));  
+    public Piece(String color,String name, int x, int y){ 
+        this(color,name,new Coordinate(x,y));  
     }
     
     
@@ -34,6 +36,9 @@ public abstract class Piece {
     }
     public void capture(){
         inPlay = false;
+    }
+    public String getName(){
+        return this.name;
     }
     
     
