@@ -2,6 +2,7 @@
 package chess.model;
 
 
+import chess.controller.DefaultController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Math;
@@ -16,7 +17,7 @@ public class DefaultModel extends AbstractModel{
     public static final String WHITE = "WHITE";
     public static final String BLACK = "BLACK";
     
-    
+    private boolean gameOver;
     private boolean stalemate;
     private boolean whitePlayerWon;
     private boolean blackPlayerWon;
@@ -36,6 +37,7 @@ public class DefaultModel extends AbstractModel{
     private HashMap<String,ArrayList<Coordinate>> blackPossibleMoves;
     
     public DefaultModel(){
+        gameOver = false;
         stalemate = false;
         whitePlayerWon = false;
         blackPlayerWon = false;
@@ -150,6 +152,19 @@ public class DefaultModel extends AbstractModel{
         
         Piece p = board[oldX][oldY].getPiece();
         this.movePiece(p, newSpace);
+        firePropertyChange(DefaultController.OCCUPY_SPACE,oldSpace,newSpace);
+        
+        this.gameOver = this.isGameOver();
+        
+        if(gameOver){
+            if(this.whitePlayerWon)
+                firePropertyChange(DefaultController.GAME_OVER_WHITE_WON,null,null);
+            else if(this.blackPlayerWon)
+                firePropertyChange(DefaultController.GAME_OVER_BLACK_WON,null,null);
+            else if(this.stalemate)
+                firePropertyChange(DefaultController.GAME_OVER_STALEMATE,null,null);
+        }
+        this.whitePlayerTurn = !whitePlayerTurn;
     }
     
     public void movePiece(Piece p, Coordinate c){

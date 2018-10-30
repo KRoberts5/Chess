@@ -18,4 +18,8 @@ public class DefaultController extends AbstractController {
     public static final String OCCUPY_SPACE = "OccupySpace";
     public static final String CAPTURE_WHITE_PIECE = "CaptureWhitePiece";
     public static final String CAPTURE_BLACK_PIECE = "CaptureBlackPiece";
+    
+    public static final String GAME_OVER_STALEMATE = "GameOverStalemate";
+    public static final String GAME_OVER_BLACK_WON = "GameOverBlackWon";
+    public static final String GAME_OVER_WHITE_WON = "GameOverWhiteWon";
 }
