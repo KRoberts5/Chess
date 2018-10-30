@@ -65,27 +65,14 @@ public class DefaultModel extends AbstractModel{
         }
         
         for(Piece p: whitePieces){
-            Coordinate pieceCoord = p.getCoordinate();
-            
-            for(int i = INIT_WHITE_ROW_MIN; i < INIT_WHITE_ROW_MAX; ++i){
-                for(int j = 0; j < MAX_SQUARE; ++j){
-                    Coordinate boardCoord = board[i][j].getCoordinate();
-                    
-                    if(boardCoord.equals(pieceCoord))
-                        board[i][j].occupy(p);
-                }
-            }
+            int x = p.getCoordinate().getX();
+            int y = p.getCoordinate().getY();
+            board[x][y].occupy(p);
         }
         for(Piece p : blackPieces){
-            Coordinate pieceCoord = p.getCoordinate();
-            for(int i = INIT_BLACK_ROW_MIN; i < INIT_BLACK_ROW_MAX; ++i){
-                for(int j = 0; j < MAX_SQUARE; ++j){
-                    Coordinate boardCoord = board[i][j].getCoordinate();
-                    
-                    if(boardCoord.equals(pieceCoord))
-                        board[i][j].occupy(p);
-                }
-            }
+            int x = p.getCoordinate().getX();
+            int y = p.getCoordinate().getY();
+            board[x][y].occupy(p);
         }
     }
     private void initStartingPossibleMoves(){
