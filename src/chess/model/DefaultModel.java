@@ -30,11 +30,9 @@ public class DefaultModel extends AbstractModel{
     private Player whitePlayer;
     private Player blackPlayer;
     
-    private ArrayList<Piece> whitePiecesIn;
-    private ArrayList<Piece> whitePiecesOut;
+    private ArrayList<Piece> whitePieces;
     private HashMap<String,ArrayList<Coordinate>> whitePossibleMoves;
-    private ArrayList<Piece> blackPiecesIn;
-    private ArrayList<Piece> blackPiecesOut;
+    private ArrayList<Piece> blackPieces;
     private HashMap<String,ArrayList<Coordinate>> blackPossibleMoves;
     
     public DefaultModel(){
@@ -47,11 +45,9 @@ public class DefaultModel extends AbstractModel{
         this.whitePlayer = new Player(WHITE);
         this.blackPlayer = new Player(BLACK);
         
-        whitePiecesIn =(ArrayList<Piece>) whitePlayer.getInPlayPieces().clone();
-        whitePiecesOut = new ArrayList();
-        blackPiecesIn = (ArrayList<Piece>) blackPlayer.getInPlayPieces().clone();
-        blackPiecesOut = new ArrayList();
-        
+        whitePieces =(ArrayList<Piece>) whitePlayer.getPieces();
+        blackPieces = (ArrayList<Piece>) blackPlayer.getPieces();
+
         this.initBoard();
         this.initStartingPossibleMoves();
         
@@ -66,7 +62,7 @@ public class DefaultModel extends AbstractModel{
             }
         }
         
-        for(Piece p: whitePiecesIn){
+        for(Piece p: whitePieces){
             Coordinate pieceCoord = p.getCoordinate();
             
             for(int i = INIT_WHITE_ROW_MIN; i < INIT_WHITE_ROW_MAX; ++i){
@@ -78,7 +74,7 @@ public class DefaultModel extends AbstractModel{
                 }
             }
         }
-        for(Piece p : blackPiecesIn){
+        for(Piece p : blackPieces){
             Coordinate pieceCoord = p.getCoordinate();
             for(int i = INIT_BLACK_ROW_MIN; i < INIT_BLACK_ROW_MAX; ++i){
                 for(int j = 0; j < MAX_SQUARE; ++j){
@@ -92,14 +88,14 @@ public class DefaultModel extends AbstractModel{
     }
     private void initStartingPossibleMoves(){
         whitePossibleMoves = new HashMap();
-        for(Piece p: whitePiecesIn){
+        for(Piece p: whitePieces){
             String name = p.getName();
             ArrayList<Coordinate> moves = Logic.possibleMoves(this.board,p);
             whitePossibleMoves.put(name, moves);
         }
         
         blackPossibleMoves = new HashMap();
-        for(Piece p : blackPiecesIn){
+        for(Piece p : blackPieces){
             String name = p.getName();
             ArrayList<Coordinate> moves = Logic.possibleMoves(this.board,p);
             blackPossibleMoves.put(name, moves);
@@ -180,19 +176,14 @@ public class DefaultModel extends AbstractModel{
     public void capturePiece(Piece p){
         String name = p.getName();
         String color = p.getColor();
-        p.capture();
         
         if(color.equals(WHITE)){
-            whitePiecesIn.remove(p);
+            whitePieces.remove(p);
             whitePossibleMoves.remove(name);
-            whitePiecesOut.add(p);
-            whitePlayer.capturePiece(p);
         }
         else{
-            blackPiecesIn.remove(p);
+            blackPieces.remove(p);
             blackPossibleMoves.remove(name);
-            blackPiecesOut.add(p);
-            blackPlayer.capturePiece(p);
         }
     }
     public static boolean validSpace(int x, int y){
@@ -216,15 +207,23 @@ public class DefaultModel extends AbstractModel{
     }
    
     public boolean checkPlayersWon(){
+        
+        boolean whiteKing = false;
+        boolean blackKing = false;
 
-        for(Piece p : whitePiecesOut){
+        for(Piece p : whitePieces){
             if(p instanceof King)
-                this.blackPlayerWon = true;
+                whiteKing = true;
         }
-        for(Piece p: blackPiecesOut){
+        for(Piece p: blackPieces){
             if(p instanceof King)
-                this.whitePlayerWon = true;
+                blackKing = true;
         }
+        
+        if(!whiteKing)
+            this.blackPlayerWon = true;
+        if(!blackKing)
+            this.whitePlayerWon = true;
         
         return whitePlayerWon || blackPlayerWon;
     }
@@ -238,21 +237,20 @@ public class DefaultModel extends AbstractModel{
         int whiteCount = 0;
         int blackCount = 0;
         
-        int whitePieces = whitePiecesIn.size();
-        int blackPieces = blackPiecesIn.size();
+        int whitePieceCount = whitePieces.size();
+        int blackPieceCount = blackPieces.size();
         
-        while(((whiteCount < whitePieces) && (blackCount < blackPieces)) && !movesLeft){
-            Piece blackPiece = blackPiecesIn.get(blackCount);
+        while(((whiteCount < whitePieceCount) && (blackCount < blackPieceCount)) && !movesLeft){
             
-            if(whiteCount < whitePieces){
-                Piece p = whitePiecesIn.get(whiteCount);
+            if(whiteCount < whitePieceCount){
+                Piece p = whitePieces.get(whiteCount);
                 ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
             
                 if(possibleMoves.size() > 0)
                     movesLeft = true;
             }
-            if(blackCount < blackPieces){
-                Piece p = blackPiecesIn.get(whiteCount);
+            if(blackCount < blackPieceCount){
+                Piece p = blackPieces.get(whiteCount);
                 ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
             
                 if(possibleMoves.size() > 0)

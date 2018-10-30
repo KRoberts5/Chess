@@ -8,7 +8,6 @@ import java.util.HashMap;
 public abstract class Piece {
     
     private String color;
-    private boolean inPlay;
     private Coordinate coordinate;
     private String name;
     
@@ -16,7 +15,6 @@ public abstract class Piece {
         this.color = color;
         this.name = name;
         this.coordinate = c;
-        this.inPlay = true;
     }
     
     public Piece(String color,String name, int x, int y){ 
@@ -33,9 +31,6 @@ public abstract class Piece {
     
     public void setCoordinate(int x, int y){
         this.coordinate.setCoordinate(x, y);
-    }
-    public void capture(){
-        inPlay = false;
     }
     public String getName(){
         return this.name;
