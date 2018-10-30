@@ -152,7 +152,6 @@ public class DefaultModel extends AbstractModel{
         
         Piece p = board[oldX][oldY].getPiece();
         this.movePiece(p, newSpace);
-        firePropertyChange(DefaultController.OCCUPY_SPACE,oldSpace,newSpace);
         
         this.gameOver = this.isGameOver();
         
@@ -165,6 +164,10 @@ public class DefaultModel extends AbstractModel{
                 firePropertyChange(DefaultController.GAME_OVER_STALEMATE,null,null);
         }
         this.whitePlayerTurn = !whitePlayerTurn;
+        
+        if(!pvp && !whitePlayerTurn){
+            //Get AI decision
+        }
     }
     
     public void movePiece(Piece p, Coordinate c){
@@ -179,6 +182,9 @@ public class DefaultModel extends AbstractModel{
         int prevY = p.getCoordinate().getY();
         
         board[prevX][prevY].unoccupy();
+        
+        firePropertyChange(DefaultController.UNOCCUPY_SPACE,null,new Coordinate(prevX,prevY));
+        
         if(board[x][y].isOccupied()){
             Piece capturedPiece = board[x][y].getPiece();
             this.capturePiece(capturedPiece);  
@@ -186,6 +192,8 @@ public class DefaultModel extends AbstractModel{
         p.setCoordinate(x, y);
         board[x][y].occupy(p);
         this.updatePossibleMoves(p);
+        
+        firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
     }
     
     public void capturePiece(Piece p){
@@ -195,10 +203,12 @@ public class DefaultModel extends AbstractModel{
         if(color.equals(WHITE)){
             whitePieces.remove(p);
             whitePossibleMoves.remove(name);
+            firePropertyChange(DefaultController.CAPTURE_WHITE_PIECE,null,p);
         }
         else{
             blackPieces.remove(p);
             blackPossibleMoves.remove(name);
+            firePropertyChange(DefaultController.CAPTURE_BLACK_PIECE,null,p);
         }
     }
     public static boolean validSpace(int x, int y){
@@ -220,7 +230,6 @@ public class DefaultModel extends AbstractModel{
         
         return gameOver;
     }
-   
     public boolean checkPlayersWon(){
         
         boolean whiteKing = false;
@@ -242,11 +251,10 @@ public class DefaultModel extends AbstractModel{
         
         return whitePlayerWon || blackPlayerWon;
     }
-     public boolean checkStalemate(){
+    public boolean checkStalemate(){
         this.stalemate = !this.movesLeft();
         return this.stalemate;
     }
-
     public boolean movesLeft(){
         boolean movesLeft = false;
         int whiteCount = 0;
