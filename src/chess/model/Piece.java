@@ -7,18 +7,27 @@ import java.util.HashMap;
 
 public abstract class Piece {
     
+    public static final String ROOK = "ROOK";
+    public static final String KNIGHT = "KNIGHT";
+    public static final String BISHOP ="BISHOP";
+    public static final String KING = "KING";
+    public static final String QUEEN = "QUEEN";
+    public static final String PAWN = "PAWN";
+    
     private String color;
     private Coordinate coordinate;
     private String name;
+    private String type;
     
-    public Piece(String color, String name, Coordinate c){
+    public Piece(String color, String name,String type, Coordinate c){
         this.color = color;
         this.name = name;
         this.coordinate = c;
+        this.type = type;
     }
     
-    public Piece(String color,String name, int x, int y){ 
-        this(color,name,new Coordinate(x,y));  
+    public Piece(String color,String name,String type, int x, int y){ 
+        this(color,name,type,new Coordinate(x,y));  
     }
     
     
@@ -34,6 +43,9 @@ public abstract class Piece {
     }
     public String getName(){
         return this.name;
+    }
+    public String getType(){
+        return type;
     }
     
     

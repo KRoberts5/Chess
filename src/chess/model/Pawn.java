@@ -9,7 +9,7 @@ public class Pawn extends Piece{
     private boolean unmoved;
     
     public Pawn(String color,String name, Coordinate c){
-        super(color,name,c);
+        super(color,name,Piece.PAWN,c);
         unmoved = true;
     }
     public Pawn(String color,String name, int x, int y){

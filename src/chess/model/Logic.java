@@ -17,17 +17,17 @@ public class Logic {
     public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] b,Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
-        if(p instanceof Pawn)
+        if(p.getType().equals(Piece.PAWN))
             possibleMoves = possibleMoves(b,(Pawn) p);
-        if(p instanceof Rook)
+        if(p.getType().equals(Piece.ROOK))
             possibleMoves = possibleMoves(b,(Rook) p);
-        if(p instanceof Bishop)
+        if(p.getType().equals(Piece.BISHOP))
             possibleMoves = possibleMoves(b,(Bishop) p);
-        if(p instanceof Knight)
+        if(p.getType().equals(Piece.KNIGHT))
             possibleMoves = possibleMoves(b,(Knight) p);
-        if(p instanceof King)
+        if(p.getType().equals(Piece.KING))
             possibleMoves = possibleMoves(b,(King) p);
-        if(p instanceof Queen)
+        if(p.getType().equals(Piece.QUEEN))
             possibleMoves = possibleMoves(b,(Queen) p);
         
         return possibleMoves;

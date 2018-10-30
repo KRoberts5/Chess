@@ -6,6 +6,6 @@ public class King extends Piece {
     
     
     public King(String color,String name, int x, int y){
-        super(color,name,x,y);
+        super(color,name,Piece.KING,x,y);
     }
 }

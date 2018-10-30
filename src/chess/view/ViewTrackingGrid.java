@@ -28,6 +28,21 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     private Color brown;
     private Color green;
     
+    private HashMap<String,ImageIcon> images; // Make Keys like "WHITE_ROOK"
+    
+    private ImageIcon whiteRook;
+    private ImageIcon whiteKnight;
+    private ImageIcon whiteBishop;
+    private ImageIcon whiteKing;
+    private ImageIcon whiteQueen;
+    private ImageIcon whitePawn;
+    private ImageIcon blackRook;
+    private ImageIcon blackKnight;
+    private ImageIcon blackBishop;
+    private ImageIcon blackKing;
+    private ImageIcon blackQueen;
+    private ImageIcon blackPawn;
+    
     private GridLabel[][] grid;
     
     public ViewTrackingGrid(DefaultController controller, int playerId) {
@@ -39,6 +54,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         green = new Color(122,217,149);
         
         initComponents();
+        initImages();
     }
     private void initComponents(){
         grid = new GridLabel[DefaultModel.MAX_SQUARE][DefaultModel.MAX_SQUARE];
@@ -56,11 +72,25 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         }
         
     }
+    private void initImages(){
+        images = new HashMap();
+    }
     
     private void spaceClicked(){
         
     }
     public void modelPropertyChange(final PropertyChangeEvent e){
+        
+        if(e.getPropertyName().equals(DefaultController.OCCUPY_SPACE)){
+            int x = ((BoardSpace)e.getNewValue()).getCoordinate().getX();
+            int y = ((BoardSpace)e.getNewValue()).getCoordinate().getY();
+            String pieceType = ((BoardSpace)e.getNewValue()).getPiece().getType().toUpperCase();
+            String color = ((BoardSpace)e.getNewValue()).getPiece().getColor().toUpperCase();
+            
+            String imageType = color + "_" + pieceType;
+            ImageIcon image = images.get(imageType);
+            grid[x][y].setIcon(image);
+        }
         
     }
 }
