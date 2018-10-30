@@ -47,8 +47,8 @@ public class DefaultModel extends AbstractModel{
         this.whitePlayer = new Player(WHITE);
         this.blackPlayer = new Player(BLACK);
         
-        whitePieces =(ArrayList<Piece>) whitePlayer.getPieces();
-        blackPieces = (ArrayList<Piece>) blackPlayer.getPieces();
+        whitePieces = whitePlayer.getPieces();
+        blackPieces = blackPlayer.getPieces();
 
         this.initBoard();
         this.initStartingPossibleMoves();
@@ -68,11 +68,13 @@ public class DefaultModel extends AbstractModel{
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
             board[x][y].occupy(p);
+            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
         }
         for(Piece p : blackPieces){
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
             board[x][y].occupy(p);
+            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
         }
     }
     private void initStartingPossibleMoves(){
