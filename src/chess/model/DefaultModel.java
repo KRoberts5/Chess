@@ -96,12 +96,10 @@ public class DefaultModel extends AbstractModel{
         String name = p.getName();
         String color = p.getColor();
         if(color.equals(WHITE)){
-            whitePossibleMoves.remove(name);
             moves = Logic.possibleMoves(this.board,p);
             whitePossibleMoves.put(name, moves);
         }
         else{
-            blackPossibleMoves.remove(name);
             moves = Logic.possibleMoves(this.board,p);
             blackPossibleMoves.put(name, moves);
         }
