@@ -23,11 +23,17 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     
     private static final String ICON_ROOT = "/resources/images/";
     
+    private Color beige;
+    private Color brown;
+    private Color green;
+    
     public ViewTrackingGrid(DefaultController controller, int playerId) {
         super();
         this.controller = controller;        
         
-        
+        beige = new Color(239,227,178);
+        brown = new Color(150,94,62);
+        green = new Color(122,217,149);
     }
     public void modelPropertyChange(final PropertyChangeEvent e){
         
