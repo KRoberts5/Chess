@@ -8,6 +8,7 @@ package chess.model;
 import static chess.model.DefaultModel.BLACK;
 import static chess.model.DefaultModel.WHITE;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -29,6 +30,24 @@ public class Logic {
             possibleMoves = possibleMoves(b,(King) p);
         if(p.getType().equals(Piece.QUEEN))
             possibleMoves = possibleMoves(b,(Queen) p);
+        
+        return possibleMoves;
+    }
+    public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] b, Piece p, HashMap<String,ArrayList<Coordinate>> opponentMoves){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        if(p.getType().equals(Piece.PAWN))
+            possibleMoves = possibleMoves(b,(Pawn) p, opponentMoves);
+        if(p.getType().equals(Piece.ROOK))
+            possibleMoves = possibleMoves(b,(Rook) p, opponentMoves);
+        if(p.getType().equals(Piece.BISHOP))
+            possibleMoves = possibleMoves(b,(Bishop) p, opponentMoves);
+        if(p.getType().equals(Piece.KNIGHT))
+            possibleMoves = possibleMoves(b,(Knight) p, opponentMoves);
+        if(p.getType().equals(Piece.KING))
+            possibleMoves = possibleMoves(b,(King) p, opponentMoves);
+        if(p.getType().equals(Piece.QUEEN))
+            possibleMoves = possibleMoves(b,(Queen) p, opponentMoves);
         
         return possibleMoves;
     }
@@ -333,8 +352,126 @@ public class Logic {
         
         return possibleMoves;
     }
-    public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board,King k){
+    public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board,King k, HashMap<String,ArrayList<Coordinate>> opponentMoves){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        String color = k.getColor();
+        
+        int x = k.getCoordinate().getX();
+        int y = k.getCoordinate().getY();
+        
+        //North Search
+        if(DefaultModel.validSpace(x, y - 1)){
+            Coordinate northCoord = new Coordinate(x, y - 1);
+            if(board[x][y - 1].isNotOccupied()){
+                if(!DefaultModel.isCheck(northCoord, opponentMoves))
+                    possibleMoves.add(northCoord);
+            }
+            else{
+                if(!board[x][y - 1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(northCoord, opponentMoves))
+                        possibleMoves.add(northCoord);
+                }
+            }
+        }
+        //South Search
+        if(DefaultModel.validSpace(x, y +1)){
+            Coordinate southCoord = new Coordinate(x, y +1);
+            if(board[x][y+1].isNotOccupied()){
+                if(!DefaultModel.isCheck(southCoord, opponentMoves))
+                    possibleMoves.add(southCoord);
+            }
+            else{
+                if(!board[x][y+1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(southCoord, opponentMoves))
+                        possibleMoves.add(southCoord);
+                }
+            }
+        }
+        //West Search
+        if(DefaultModel.validSpace(x - 1, y)){
+            Coordinate westCoord = new Coordinate(x-1,y);
+            if(board[x-1][y].isNotOccupied()){
+                if(!DefaultModel.isCheck(westCoord, opponentMoves))
+                    possibleMoves.add(westCoord);
+            }
+            else{
+                if(!board[x-1][y].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(westCoord, opponentMoves))
+                        possibleMoves.add(westCoord);
+                }
+            }
+        }
+        //East Search
+        if(DefaultModel.validSpace( x + 1, y)){
+            Coordinate eastCoord = new Coordinate(x + 1, y);
+            if(board[x+1][y].isNotOccupied()){
+                if(!DefaultModel.isCheck(eastCoord, opponentMoves))
+                    possibleMoves.add(eastCoord);
+            }
+            else{
+                if(!board[x+1][y].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(eastCoord, opponentMoves))
+                        possibleMoves.add(eastCoord);
+                }
+            }
+        }
+        //North West Search
+        if(DefaultModel.validSpace(x - 1, y - 1)){
+            Coordinate northWestCoord = new Coordinate(x - 1, y - 1);
+            if(board[x-1][y - 1].isNotOccupied()){
+                if(!DefaultModel.isCheck(northWestCoord, opponentMoves))
+                        possibleMoves.add(northWestCoord);
+            }
+            else{
+                if(!board[x-1][y-1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(northWestCoord, opponentMoves))
+                        possibleMoves.add(northWestCoord);
+                }
+            }
+        }
+        //North East Search
+        if(DefaultModel.validSpace(x + 1, y - 1)){
+            Coordinate northEastCoord = new Coordinate(x + 1, y + 1);
+            if(board[x + 1][y - 1].isNotOccupied()){
+                if(!DefaultModel.isCheck(northEastCoord, opponentMoves))
+                    possibleMoves.add(northEastCoord);
+            }
+            else{
+                if(!board[x + 1][y - 1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(northEastCoord, opponentMoves))
+                        possibleMoves.add(northEastCoord);
+                }
+            }
+        }
+        //South West Search
+        if(DefaultModel.validSpace(x - 1, y + 1)){
+            Coordinate southWestCoord = new Coordinate(x - 1, y + 1);
+            if(board[x - 1][y + 1].isNotOccupied()){
+                if(!DefaultModel.isCheck(southWestCoord, opponentMoves))
+                    possibleMoves.add(southWestCoord);
+            }
+            else{
+                if(!board[x-1][y + 1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(southWestCoord, opponentMoves))
+                        possibleMoves.add(southWestCoord);
+                }
+            }
+        }
+        //South East Coordinate
+        if(DefaultModel.validSpace(x + 1, y + 1)){
+            Coordinate southEastCoord = new Coordinate(x + 1, y + 1);
+            if(board[x+1][y+1].isNotOccupied()){
+                if(!DefaultModel.isCheck(southEastCoord, opponentMoves))
+                    possibleMoves.add(southEastCoord);
+            }
+            else{
+                if(!board[x+1][y+1].getPiece().getColor().equals(color)){
+                    if(!DefaultModel.isCheck(southEastCoord, opponentMoves))
+                        possibleMoves.add(southEastCoord);
+                }
+            }
+        }
         
         return possibleMoves;
     }

@@ -98,11 +98,13 @@ public class DefaultModel extends AbstractModel{
         String name = p.getName();
         String color = p.getColor();
         if(color.equals(WHITE)){
-            moves = Logic.possibleMoves(this.board,p);
+            HashMap<String,ArrayList<Coordinate>> blackMoves =  blackPossibleMoves;
+            moves = Logic.possibleMoves(this.board,p,blackMoves);
             whitePossibleMoves.put(name, moves);
         }
         else{
-            moves = Logic.possibleMoves(this.board,p);
+            HashMap<String,ArrayList<Coordinate>> whiteMoves =  whitePossibleMoves;
+            moves = Logic.possibleMoves(this.board,p,whiteMoves);
             blackPossibleMoves.put(name, moves);
         }
         
@@ -197,6 +199,14 @@ public class DefaultModel extends AbstractModel{
             blackPossibleMoves.remove(name);
             firePropertyChange(DefaultController.CAPTURE_BLACK_PIECE,null,p);
         }
+        
+        if(p.getType().equals(Piece.KING)){
+            if(p.getColor().equals(WHITE))
+                blackPlayerWon = true;
+            else
+                whitePlayerWon = true;
+        }
+        
     }
     public static boolean validSpace(int x, int y){
         boolean valid = false;
@@ -210,8 +220,9 @@ public class DefaultModel extends AbstractModel{
     }
     public boolean isGameOver(){
         
-        this.checkStalemate();
-        this.checkPlayersWon();
+        if(!whitePlayerWon && !blackPlayerWon)
+            this.checkStalemate();
+        //this.checkPlayersWon();
         
         boolean gameOver = this.stalemate || this.whitePlayerWon || this.blackPlayerWon;
         
@@ -274,6 +285,18 @@ public class DefaultModel extends AbstractModel{
         return movesLeft;
     }
     
-    
+    public static boolean isCheck(Coordinate coord, HashMap<String,ArrayList<Coordinate>> opponentMoves){
+        boolean check = false;
+        
+        for(HashMap.Entry<String, ArrayList<Coordinate>> e: opponentMoves.entrySet()){
+            ArrayList<Coordinate> moves = e.getValue();
+            
+            for(Coordinate c : moves){
+                if(c.equals(coord))
+                    check = true;
+            }
+        }
+        return check;
+    }
     
 }
