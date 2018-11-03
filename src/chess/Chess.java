@@ -13,6 +13,8 @@ public class Chess {
         
         DefaultModel model = new DefaultModel();
         
+        model.initDefautls();
+        
         System.out.println(model);
         
         

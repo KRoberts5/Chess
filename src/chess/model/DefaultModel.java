@@ -50,9 +50,11 @@ public class DefaultModel extends AbstractModel{
         whitePieces = whitePlayer.getPieces();
         blackPieces = blackPlayer.getPieces();
 
+    }
+    
+    public void initDefautls(){
         this.initBoard();
         this.initStartingPossibleMoves();
-        
     }
     
     private void initBoard(){
