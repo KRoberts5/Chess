@@ -29,7 +29,7 @@ public class GridLabel extends JLabel{
         
         /* Initialize JLabel Properties */
         
-        this.setPreferredSize(new Dimension(32, 32));
+        this.setPreferredSize(new Dimension(WIDTH, WIDTH));
         this.setForeground(Color.WHITE);
         this.setOpaque(true);
         this.setVisible(true);

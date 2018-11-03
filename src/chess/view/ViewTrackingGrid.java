@@ -61,7 +61,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         
         for(int i = 0; i < DefaultModel.MAX_SQUARE; ++i){
             for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
-                grid[i][j] = new GridLabel(this,i,j);
+                grid[i][j] = new GridLabel(this,j,i);
                 if((i%2)==(j%2)){
                     grid[i][j].setBackground(brown);
                 }
