@@ -17,14 +17,15 @@ import chess.model.Coordinate;
 
 public class GridLabel extends JLabel{
     
-    private final Coordinate coordinate;
+    private final Coordinate COORDINATE;
+    private static final int WIDTH = 64;
     
     public GridLabel(AbstractView parent, int x, int y) {
         
         super("", SwingConstants.CENTER);
         
         
-        this.coordinate = new Coordinate(x,y);
+        this.COORDINATE = new Coordinate(x,y);
         
         /* Initialize JLabel Properties */
         
@@ -36,12 +37,12 @@ public class GridLabel extends JLabel{
     }
     
     public Coordinate getCoordinate(){
-        return this.coordinate;
+        return this.COORDINATE;
     }
     public int getX(){
-        return this.coordinate.getX();
+        return this.COORDINATE.getX();
     }
     public int getY(){
-        return this.coordinate.getY();
+        return this.COORDINATE.getY();
     }
 }

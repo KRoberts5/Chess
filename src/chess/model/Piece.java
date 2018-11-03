@@ -18,12 +18,14 @@ public abstract class Piece {
     private Coordinate coordinate;
     private String name;
     private String type;
+    private boolean unmoved;
     
     public Piece(String color, String name,String type, Coordinate c){
         this.color = color;
         this.name = name;
         this.coordinate = c;
         this.type = type;
+        this.unmoved = true;
     }
     
     public Piece(String color,String name,String type, int x, int y){ 
@@ -46,6 +48,13 @@ public abstract class Piece {
     }
     public String getType(){
         return type;
+    }
+    
+    public boolean isUnmoved(){
+        return unmoved;
+    }
+    public void move(){
+        unmoved = false;
     }
     
     

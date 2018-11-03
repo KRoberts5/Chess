@@ -22,5 +22,12 @@ public class Coordinate {
     public int getY(){
         return this.y;
     }
+    public String toString(){
+        String output = "";
+        output += "X: " + x;
+        output += ", Y: " + y;
+        
+        return output;
+    }
     
 }

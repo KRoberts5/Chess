@@ -15,6 +15,9 @@ import java.util.HashMap;
  * @author Brendan
  */
 public class Logic {
+    
+    public static final int CASTLE_DISTANCE = 2;
+    
     public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] b,Piece p){
         ArrayList<Coordinate> possibleMoves = new ArrayList<>();
         
@@ -37,17 +40,17 @@ public class Logic {
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
         if(p.getType().equals(Piece.PAWN))
-            possibleMoves = possibleMoves(b,(Pawn) p, opponentMoves);
+            possibleMoves = possibleMoves(b,(Pawn) p);
         if(p.getType().equals(Piece.ROOK))
-            possibleMoves = possibleMoves(b,(Rook) p, opponentMoves);
+            possibleMoves = possibleMoves(b,(Rook) p);
         if(p.getType().equals(Piece.BISHOP))
-            possibleMoves = possibleMoves(b,(Bishop) p, opponentMoves);
+            possibleMoves = possibleMoves(b,(Bishop) p);
         if(p.getType().equals(Piece.KNIGHT))
-            possibleMoves = possibleMoves(b,(Knight) p, opponentMoves);
+            possibleMoves = possibleMoves(b,(Knight) p);
         if(p.getType().equals(Piece.KING))
             possibleMoves = possibleMoves(b,(King) p, opponentMoves);
         if(p.getType().equals(Piece.QUEEN))
-            possibleMoves = possibleMoves(b,(Queen) p, opponentMoves);
+            possibleMoves = possibleMoves(b,(Queen) p);
         
         return possibleMoves;
     }
@@ -61,31 +64,31 @@ public class Logic {
         if(color.equals(DefaultModel.WHITE)){
             
             if(DefaultModel.validSpace(currentX, currentY - 1)){
-                if(board[currentX][currentY - 1].isNotOccupied()){
+                if(board[currentY - 1][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY - 1);
                     possibleMoves.add(c);
                 }
             }
             if(DefaultModel.validSpace(currentX - 1, currentY - 1)){
-                if(board[currentX - 1][currentY - 1].isOccupied()){
-                    if(board[currentX - 1][currentY - 1].getPiece().getColor().equals(BLACK)){
+                if(board[currentY - 1][currentX - 1].isOccupied()){
+                    if(board[currentY - 1][currentX - 1].getPiece().getColor().equals(BLACK)){
                         Coordinate c = new Coordinate(currentX - 1, currentY - 1);
                         possibleMoves.add(c);
                     }
                 }
             }
             if(DefaultModel.validSpace(currentX + 1, currentY - 1)){
-                if(board[currentX + 1][currentY - 1].isOccupied()){
-                    if(board[currentX + 1][currentY - 1].getPiece().getColor().equals(BLACK)){
+                if(board[currentY - 1][currentX + 1].isOccupied()){
+                    if(board[currentY - 1][currentX + 1].getPiece().getColor().equals(BLACK)){
                         Coordinate c = new Coordinate(currentX + 1, currentY - 1);
                         possibleMoves.add(c);
                     }
                 }
             }
             
-            if(p.unmoved()){
+            if(p.isUnmoved()){
                 if((DefaultModel.validSpace(currentX, currentY - 1)) && (DefaultModel.validSpace(currentX, currentY - 2))){
-                    if((board[currentX][currentY - 1].isNotOccupied()) && (board[currentX][currentY - 2].isNotOccupied())){
+                    if((board[currentY - 1][currentX].isNotOccupied()) && (board[currentY - 2][currentX].isNotOccupied())){
                         Coordinate c = new Coordinate(currentX, currentY - 2);
                         possibleMoves.add(c);
                     }
@@ -95,31 +98,31 @@ public class Logic {
         }
         else{
             if(DefaultModel.validSpace(currentX, currentY + 1)){
-                if(board[currentX][currentY + 1].isNotOccupied()){
+                if(board[currentY + 1][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + 1);
                     possibleMoves.add(c);
                 }
             }
             if(DefaultModel.validSpace(currentX - 1, currentY + 1)){
-                if(board[currentX - 1][currentY + 1].isOccupied()){
-                    if(board[currentX - 1][currentY + 1].getPiece().getColor().equals(WHITE)){
+                if(board[currentY + 1][currentX - 1].isOccupied()){
+                    if(board[currentY + 1][currentX - 1].getPiece().getColor().equals(WHITE)){
                         Coordinate c = new Coordinate(currentX - 1, currentY + 1);
                         possibleMoves.add(c);
                     }
                 }
             }
             if(DefaultModel.validSpace(currentX + 1, currentY + 1)){
-                if(board[currentX +1][currentY + 1].isOccupied()){
-                    if(board[currentX +1][currentY + 1].getPiece().getColor().equals(WHITE)){
+                if(board[currentY + 1][currentX +1].isOccupied()){
+                    if(board[currentY + 1][currentX +1].getPiece().getColor().equals(WHITE)){
                         Coordinate c = new Coordinate(currentX + 1, currentY + 1);
                         possibleMoves.add(c);
                     }
                 }
             }
             
-            if(p.unmoved()){
+            if(p.isUnmoved()){
                 if((DefaultModel.validSpace(currentX, currentY + 1)) && (DefaultModel.validSpace(currentX, currentY + 2))){
-                    if((board[currentX][currentY + 1].isNotOccupied()) && (board[currentX][currentY + 2].isNotOccupied())){
+                    if((board[currentY + 1][currentX].isNotOccupied()) && (board[currentY + 2][currentX].isNotOccupied())){
                         Coordinate c = new Coordinate(currentX, currentY + 2);
                         possibleMoves.add(c);
                     }
@@ -148,17 +151,18 @@ public class Logic {
         int westCount = 1;
         int eastCount = 1;
         
+        
            
         while(northSearch){
             yMod = -1*northCount;
 
             if(DefaultModel.validSpace(currentX, currentY + yMod)){
-                if(board[currentX][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -174,12 +178,12 @@ public class Logic {
             yMod = 1*southCount;
 
             if(DefaultModel.validSpace(currentX, currentY + yMod)){
-                if(board[currentX][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -195,12 +199,12 @@ public class Logic {
             xMod = -1*westCount;
 
             if(DefaultModel.validSpace(currentX + xMod, currentY)){
-                if(board[currentX + xMod][currentY].isNotOccupied()){
+                if(board[currentY][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
+                    if(!board[currentY][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -216,12 +220,12 @@ public class Logic {
             xMod = 1*eastCount;
 
             if(DefaultModel.validSpace(currentX + xMod, currentY)){
-                if(board[currentX + xMod][currentY].isNotOccupied()){
+                if(board[currentY][currentX + xMod].isNotOccupied()){
                      Coordinate c = new Coordinate(currentX + xMod, currentY);
                      possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
+                    if(!board[currentY][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -233,6 +237,7 @@ public class Logic {
 
             ++eastCount;
         }
+
         
         return possibleMoves;
     }
@@ -260,12 +265,12 @@ public class Logic {
             yMod = -1*northWestCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -283,12 +288,12 @@ public class Logic {
             yMod = -1*northEastCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -305,12 +310,12 @@ public class Logic {
             yMod = southWestCount;
             
             if(DefaultModel.validSpace(currentX +xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -327,12 +332,12 @@ public class Logic {
             yMod = southEastCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -350,8 +355,17 @@ public class Logic {
     public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board,Knight k){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
+        
+        
         return possibleMoves;
     }
+    
+    public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board, King k){
+        ArrayList<Coordinate> possibleMoves = new ArrayList();
+        
+        return possibleMoves;
+    }
+    
     public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board,King k, HashMap<String,ArrayList<Coordinate>> opponentMoves){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
@@ -360,15 +374,18 @@ public class Logic {
         int x = k.getCoordinate().getX();
         int y = k.getCoordinate().getY();
         
+        
+        
+        
         //North Search
         if(DefaultModel.validSpace(x, y - 1)){
             Coordinate northCoord = new Coordinate(x, y - 1);
-            if(board[x][y - 1].isNotOccupied()){
+            if(board[y - 1][x].isNotOccupied()){
                 if(!DefaultModel.isCheck(northCoord, opponentMoves))
                     possibleMoves.add(northCoord);
             }
             else{
-                if(!board[x][y - 1].getPiece().getColor().equals(color)){
+                if(!board[y - 1][x].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(northCoord, opponentMoves))
                         possibleMoves.add(northCoord);
                 }
@@ -377,12 +394,12 @@ public class Logic {
         //South Search
         if(DefaultModel.validSpace(x, y +1)){
             Coordinate southCoord = new Coordinate(x, y +1);
-            if(board[x][y+1].isNotOccupied()){
+            if(board[y+1][x].isNotOccupied()){
                 if(!DefaultModel.isCheck(southCoord, opponentMoves))
                     possibleMoves.add(southCoord);
             }
             else{
-                if(!board[x][y+1].getPiece().getColor().equals(color)){
+                if(!board[y+1][x].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(southCoord, opponentMoves))
                         possibleMoves.add(southCoord);
                 }
@@ -391,12 +408,12 @@ public class Logic {
         //West Search
         if(DefaultModel.validSpace(x - 1, y)){
             Coordinate westCoord = new Coordinate(x-1,y);
-            if(board[x-1][y].isNotOccupied()){
+            if(board[y][x-1].isNotOccupied()){
                 if(!DefaultModel.isCheck(westCoord, opponentMoves))
                     possibleMoves.add(westCoord);
             }
             else{
-                if(!board[x-1][y].getPiece().getColor().equals(color)){
+                if(!board[y][x-1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(westCoord, opponentMoves))
                         possibleMoves.add(westCoord);
                 }
@@ -405,12 +422,12 @@ public class Logic {
         //East Search
         if(DefaultModel.validSpace( x + 1, y)){
             Coordinate eastCoord = new Coordinate(x + 1, y);
-            if(board[x+1][y].isNotOccupied()){
+            if(board[y][x+1].isNotOccupied()){
                 if(!DefaultModel.isCheck(eastCoord, opponentMoves))
                     possibleMoves.add(eastCoord);
             }
             else{
-                if(!board[x+1][y].getPiece().getColor().equals(color)){
+                if(!board[y][x+1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(eastCoord, opponentMoves))
                         possibleMoves.add(eastCoord);
                 }
@@ -419,12 +436,12 @@ public class Logic {
         //North West Search
         if(DefaultModel.validSpace(x - 1, y - 1)){
             Coordinate northWestCoord = new Coordinate(x - 1, y - 1);
-            if(board[x-1][y - 1].isNotOccupied()){
+            if(board[y - 1][x-1].isNotOccupied()){
                 if(!DefaultModel.isCheck(northWestCoord, opponentMoves))
                         possibleMoves.add(northWestCoord);
             }
             else{
-                if(!board[x-1][y-1].getPiece().getColor().equals(color)){
+                if(!board[y-1][x-1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(northWestCoord, opponentMoves))
                         possibleMoves.add(northWestCoord);
                 }
@@ -433,12 +450,12 @@ public class Logic {
         //North East Search
         if(DefaultModel.validSpace(x + 1, y - 1)){
             Coordinate northEastCoord = new Coordinate(x + 1, y + 1);
-            if(board[x + 1][y - 1].isNotOccupied()){
+            if(board[y - 1][x + 1].isNotOccupied()){
                 if(!DefaultModel.isCheck(northEastCoord, opponentMoves))
                     possibleMoves.add(northEastCoord);
             }
             else{
-                if(!board[x + 1][y - 1].getPiece().getColor().equals(color)){
+                if(!board[y - 1][x + 1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(northEastCoord, opponentMoves))
                         possibleMoves.add(northEastCoord);
                 }
@@ -447,12 +464,12 @@ public class Logic {
         //South West Search
         if(DefaultModel.validSpace(x - 1, y + 1)){
             Coordinate southWestCoord = new Coordinate(x - 1, y + 1);
-            if(board[x - 1][y + 1].isNotOccupied()){
+            if(board[y + 1][x - 1].isNotOccupied()){
                 if(!DefaultModel.isCheck(southWestCoord, opponentMoves))
                     possibleMoves.add(southWestCoord);
             }
             else{
-                if(!board[x-1][y + 1].getPiece().getColor().equals(color)){
+                if(!board[y + 1][x-1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(southWestCoord, opponentMoves))
                         possibleMoves.add(southWestCoord);
                 }
@@ -461,16 +478,21 @@ public class Logic {
         //South East Coordinate
         if(DefaultModel.validSpace(x + 1, y + 1)){
             Coordinate southEastCoord = new Coordinate(x + 1, y + 1);
-            if(board[x+1][y+1].isNotOccupied()){
+            if(board[y+1][x+1].isNotOccupied()){
                 if(!DefaultModel.isCheck(southEastCoord, opponentMoves))
                     possibleMoves.add(southEastCoord);
             }
             else{
-                if(!board[x+1][y+1].getPiece().getColor().equals(color)){
+                if(!board[y+1][x+1].getPiece().getColor().equals(color)){
                     if(!DefaultModel.isCheck(southEastCoord, opponentMoves))
                         possibleMoves.add(southEastCoord);
                 }
             }
+        }
+        
+        if(westCastleAvailable(board,k,opponentMoves)){
+            Coordinate castling = new Coordinate(2,7);
+            possibleMoves.add(castling);
         }
         
         return possibleMoves;
@@ -504,16 +526,17 @@ public class Logic {
         int southWestCount = 1;
         int southEastCount = 1;
         
+        
         while(northSearch){
             yMod = -1*northCount;
 
             if(DefaultModel.validSpace(currentX, currentY + yMod)){
-                if(board[currentX][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -529,12 +552,12 @@ public class Logic {
             yMod = 1*southCount;
 
             if(DefaultModel.validSpace(currentX, currentY + yMod)){
-                if(board[currentX][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -550,12 +573,12 @@ public class Logic {
             xMod = -1*westCount;
 
             if(DefaultModel.validSpace(currentX + xMod, currentY)){
-                if(board[currentX + xMod][currentY].isNotOccupied()){
+                if(board[currentY][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
+                    if(!board[currentY][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -571,12 +594,12 @@ public class Logic {
             xMod = 1*eastCount;
 
             if(DefaultModel.validSpace(currentX + xMod, currentY)){
-                if(board[currentX + xMod][currentY].isNotOccupied()){
+                if(board[currentY][currentX + xMod].isNotOccupied()){
                      Coordinate c = new Coordinate(currentX + xMod, currentY);
                      possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY].getPiece().getColor().equals(color)){
+                    if(!board[currentY][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY);
                         possibleMoves.add(c);
                     }
@@ -594,12 +617,12 @@ public class Logic {
             yMod = -1*northWestCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -617,12 +640,12 @@ public class Logic {
             yMod = -1*northEastCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -639,12 +662,12 @@ public class Logic {
             yMod = southWestCount;
             
             if(DefaultModel.validSpace(currentX +xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX +xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -661,12 +684,12 @@ public class Logic {
             yMod = southEastCount;
             
             if(DefaultModel.validSpace(currentX + xMod, currentY + yMod)){
-                if(board[currentX + xMod][currentY + yMod].isNotOccupied()){
+                if(board[currentY + yMod][currentX + xMod].isNotOccupied()){
                     Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                     possibleMoves.add(c);
                 }
                 else{
-                    if(!board[currentX + xMod][currentY + yMod].getPiece().getColor().equals(color)){
+                    if(!board[currentY + yMod][currentX + xMod].getPiece().getColor().equals(color)){
                         Coordinate c = new Coordinate(currentX + xMod, currentY + yMod);
                         possibleMoves.add(c);
                     }
@@ -680,6 +703,100 @@ public class Logic {
         }
         
         return possibleMoves;
+    }
+    public static boolean westCastleAvailable(BoardSpace[][] board, King k, HashMap<String,ArrayList<Coordinate>> opponentMoves){
+        boolean available = k.isUnmoved();
+        
+        if(k.isUnmoved()){
+            
+            int startingY = 7;
+            
+            int rookX = 0;
+            int knightX = 1;
+            int bishopX = 2;
+            int queenX = 3;
+            
+            if(board[startingY][knightX].isOccupied())
+                available = false;
+            if(board[startingY][bishopX].isOccupied())
+                available = false;
+            if(board[startingY][queenX].isOccupied())
+                available = false;
+            
+            if(board[startingY][rookX].isNotOccupied())
+                available = false;
+            else{
+                Piece p = board[startingY][rookX].getPiece();
+                
+                if(p.getType().equals(Piece.ROOK)){
+                    if(!p.isUnmoved())
+                        available = false;
+                }
+                else
+                    available = false;
+            }
+            
+            if(available){
+                Coordinate adjacent = new Coordinate(queenX,startingY);
+                Coordinate target = new Coordinate(bishopX,startingY);
+            
+                boolean adjacentChecked = DefaultModel.isCheck(adjacent, opponentMoves);
+                boolean targetChecked = DefaultModel.isCheck(target, opponentMoves);
+                
+                if(adjacentChecked || targetChecked)
+                    available = false;
+                
+            }   
+        }
+ 
+        return available;
+    }
+    public static boolean wasWestCastle(Coordinate previous, Coordinate target){
+        boolean wasCastle = false;
+        
+        int distance = (int)getDistance(previous,target);
+        
+        
+        if((distance == CASTLE_DISTANCE) && AWestOfB(target,previous))
+            wasCastle = true;
+        
+        return wasCastle;
+    }
+    
+    public static boolean wasEastCastle(Coordinate previous, Coordinate target){
+        boolean wasCastle = false;
+        
+        int distance = (int)getDistance(previous,target);
+        
+        
+        if((distance == CASTLE_DISTANCE) && AEastOfB(target,previous))
+            wasCastle = true;
+        
+        return wasCastle;
+    }
+    
+    public static boolean AWestOfB(Coordinate a, Coordinate b){
+        
+        boolean westOf = false;
+        
+        int xOfA = a.getX();
+        int xOfB = b.getX();
+        
+        if(xOfA < xOfB)
+            westOf = true;
+        
+        return westOf;
+    }
+    public static boolean AEastOfB(Coordinate a, Coordinate b){
+        boolean eastOf = false;
+        
+        int xOfA = a.getX();
+        int xOfB = b.getX();
+        
+        if(xOfA > xOfB)
+            eastOf = true;
+        
+        return eastOf;
     }
     public static double getDistance(Coordinate p1, Coordinate p2){
         double distance = 0;

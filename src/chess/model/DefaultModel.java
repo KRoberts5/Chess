@@ -60,21 +60,22 @@ public class DefaultModel extends AbstractModel{
         
         for(int i = 0; i < MAX_SQUARE; ++i){
             for(int j = 0; j < MAX_SQUARE; ++j){
-                board[i][j] = new BoardSpace(i,j);
+                board[i][j] = new BoardSpace(j,i);
+                
             }
         }
         
         for(Piece p: whitePieces){
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
-            board[x][y].occupy(p);
-            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
+            board[y][x].occupy(p);
+            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[y][x]);
         }
         for(Piece p : blackPieces){
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
-            board[x][y].occupy(p);
-            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
+            board[y][x].occupy(p);
+            firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[y][x]);
         }
     }
     private void initStartingPossibleMoves(){
@@ -126,7 +127,7 @@ public class DefaultModel extends AbstractModel{
         int x = c.getX();
         int y = c.getY();
         
-        return this.getPossibleMoves(board[x][y].getPiece());
+        return this.getPossibleMoves(board[y][x].getPiece());
     }
     public void setGameType(String gameType){
         if(gameType.equals(pvp))
@@ -139,7 +140,7 @@ public class DefaultModel extends AbstractModel{
         int oldX = oldSpace.getX();
         int oldY = oldSpace.getY();
         
-        Piece p = board[oldX][oldY].getPiece();
+        Piece p = board[oldY][oldX].getPiece();
         this.movePiece(p, newSpace);
         
         this.gameOver = this.isGameOver();
@@ -167,22 +168,48 @@ public class DefaultModel extends AbstractModel{
     }
     
     public void movePiece(Piece p, int x, int y){
+        
+        boolean castling = false;
+        Coordinate previousSpace = p.getCoordinate();
+        Coordinate target = new Coordinate(x,y);
+        
         int prevX = p.getCoordinate().getX();
         int prevY = p.getCoordinate().getY();
         
-        board[prevX][prevY].unoccupy();
+        board[prevY][prevX].unoccupy();
         
         firePropertyChange(DefaultController.UNOCCUPY_SPACE,null,new Coordinate(prevX,prevY));
         
-        if(board[x][y].isOccupied()){
-            Piece capturedPiece = board[x][y].getPiece();
+        if(board[y][x].isOccupied()){
+            Piece capturedPiece = board[y][x].getPiece();
             this.capturePiece(capturedPiece);  
         }
         p.setCoordinate(x, y);
-        board[x][y].occupy(p);
-        this.updatePossibleMoves(p);
+        board[y][x].occupy(p);
         
-        firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[x][y]);
+        for(Piece whitePiece : whitePieces)
+            this.updatePossibleMoves(whitePiece);
+        for(Piece blackPiece : blackPieces)
+            this.updatePossibleMoves(blackPiece);
+        
+        firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[y][x]);
+        
+        if(p.getType().equals(Piece.KING)){
+            if(Logic.wasWestCastle(previousSpace,target)){
+                if(board[7][0].isOccupied()){
+                    Piece castlePiece = board[7][0].getPiece();
+                    if(castlePiece.getType().equals(Piece.ROOK))
+                        this.movePiece(castlePiece, 3,7);
+                }
+            }
+            else if(Logic.wasEastCastle(previousSpace, target)){
+                //finish code
+            }
+        }
+        
+        if(p.isUnmoved()){
+            p.move();
+        }
     }
     
     public void capturePiece(Piece p){
@@ -297,6 +324,27 @@ public class DefaultModel extends AbstractModel{
             }
         }
         return check;
+    }
+    
+    public String toString(){
+        String output = "";
+        
+        for(int i = 0; i < MAX_SQUARE; ++i){
+            for(int j = 0; j < MAX_SQUARE; ++j){
+                if(board[i][j].isOccupied()){
+                    Piece p = board[i][j].getPiece();
+                    String type = p.getType().toUpperCase();
+                    
+                    output += " " + type.charAt(0) + " ";
+                }
+                else
+                    output += " - ";
+                
+                    
+            }
+            output+= "\n";
+        }
+        return output;
     }
     
 }
