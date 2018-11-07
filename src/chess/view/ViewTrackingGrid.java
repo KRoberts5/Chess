@@ -22,7 +22,10 @@ import chess.model.*;
 public class ViewTrackingGrid extends JPanel implements AbstractView {
     private final DefaultController controller;
     
+    private boolean whitePlayerTurn;
+    
     private static final String ICON_ROOT = "/resources/images/";
+    private static final String PNG = ".png";
     private static final String WHITE_PAWN = "white_pawn";
     private static final String WHITE_ROOK = "white_rook";
     private static final String WHITE_BISHOP = "white_bishop";
@@ -39,6 +42,8 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     private Color beige;
     private Color brown;
     private Color green;
+    private static final Color GRID_LINES = new Color(49, 148, 171);
+    
     
     private HashMap<String,ImageIcon> images; // Make Keys like "WHITE_ROOK"
     
@@ -55,11 +60,13 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     private ImageIcon blackQueen;
     private ImageIcon blackPawn;
     
-    private GridLabel[][] grid;
+    //private GridLabel[][] grid;
+    private ArrayList<ArrayList<GridLabel>> labels;
     
-    public ViewTrackingGrid(DefaultController controller, int playerId) {
+    public ViewTrackingGrid(DefaultController controller) {
         super();
-        this.controller = controller;        
+        this.controller = controller;     
+        this.whitePlayerTurn = true;
         
         beige = new Color(239,227,178);
         brown = new Color(150,94,62);
@@ -69,43 +76,76 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         initImages();
     }
     private void initComponents(){
-        grid = new GridLabel[DefaultModel.MAX_SQUARE][DefaultModel.MAX_SQUARE];
+        
+        this.setLayout(new GridLayout(DefaultModel.MAX_SQUARE,DefaultModel.MAX_SQUARE));
+        //this.setBackground(green);
+        //grid = new GridLabel[DefaultModel.MAX_SQUARE][DefaultModel.MAX_SQUARE];
+        labels = new ArrayList();
+        ArrayList<GridLabel> row;
+        GridLabel label;
         
         for(int i = 0; i < DefaultModel.MAX_SQUARE; ++i){
+            row = new ArrayList();
             for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
-                grid[i][j] = new GridLabel(this,j,i);
+                label = new GridLabel(this,j,i);
                 if((i%2)==(j%2)){
-                    grid[i][j].setBackground(brown);
+                    label.setBackground(brown);
                 }
                 else{
-                    grid[i][j].setBackground(beige);
+                    label.setBackground(beige);
                 }
+                
+                label.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        selectSquare((GridLabel)(e.getSource()));
+                    }
+                    
+                });
+                this.add(label);
+                row.add(label);
+                
             }
+            labels.add(row);
         }
+        
+        
         
     }
     private void initImages(){
         images = new HashMap();
         
-        whitePawn = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_PAWN));
-        whiteRook = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_ROOK));
-        whiteBishop = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_BISHOP));
+        whitePawn = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_PAWN + PNG));
+        whiteRook = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_ROOK + PNG));
+        whiteKnight = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_KNIGHT + PNG));
+        whiteBishop = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_BISHOP + PNG));
+        whiteQueen = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_QUEEN + PNG));
+        whiteKing = new ImageIcon(getClass().getResource(ICON_ROOT + WHITE_KING + PNG));
         
         images.put(WHITE_PAWN, whitePawn);
         images.put(WHITE_ROOK, whiteRook);
+        images.put(WHITE_KNIGHT,whiteKnight);
         images.put(WHITE_BISHOP, whiteBishop);
+        images.put(WHITE_QUEEN, whiteQueen);
+        images.put(WHITE_KING, whiteKing);
         
-        blackPawn = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_PAWN));
-        blackRook = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_ROOK));
-        blackBishop = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_BISHOP));
+        blackPawn = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_PAWN + PNG));
+        blackRook = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_ROOK + PNG));
+        blackKnight = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_ROOK + PNG));
+        blackBishop = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_BISHOP + PNG));
+        blackQueen = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_QUEEN + PNG));
+        blackKing = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_KING + PNG));
         
         images.put(BLACK_PAWN, blackPawn);
         images.put(BLACK_ROOK, blackRook);
+        images.put(BLACK_KNIGHT, blackKnight);
         images.put(BLACK_BISHOP, blackBishop);
+        images.put(BLACK_QUEEN, blackQueen);
+        images.put(BLACK_KING, blackKing);
         
     }
     
-    private void spaceClicked(){
+    private void selectSquare(GridLabel label){
         
     }
     public void modelPropertyChange(final PropertyChangeEvent e){
@@ -118,7 +158,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
             
             String imageType = color.toLowerCase() + "_" + pieceType.toLowerCase();
             ImageIcon image = images.get(imageType);
-            grid[x][y].setIcon(image);
+            labels.get(y).get(x).setIcon(image);
         }
         
     }

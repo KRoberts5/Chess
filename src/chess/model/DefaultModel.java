@@ -52,7 +52,7 @@ public class DefaultModel extends AbstractModel{
 
     }
     
-    public void initDefautls(){
+    public void initDefaults(){
         this.initBoard();
         this.initStartingPossibleMoves();
     }
