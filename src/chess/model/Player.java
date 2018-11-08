@@ -9,6 +9,7 @@ public class Player {
     
     private String color;
     private ArrayList<Piece> pieces;
+    private King king;
     
     public Player(String color){
         this.color = color;
@@ -47,8 +48,11 @@ public class Player {
                             pieces.add(new Bishop(this.color,name,j,i));
                         else if(j == 3)
                             pieces.add(new Queen(this.color,name,j,i));
-                        else if(j == 4)
-                            pieces.add(new King(this.color,name,j,i));
+                        else if(j == 4){
+                            king = new King(this.color,name,j,i);
+                            pieces.add(king);
+                        }
+                            
                     }
                     
                 }
@@ -58,5 +62,8 @@ public class Player {
     
     public ArrayList<Piece> getPieces(){
         return this.pieces;
+    }
+    public King getKing(){
+        return king;
     }
 }

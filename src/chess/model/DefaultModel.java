@@ -237,7 +237,7 @@ public class DefaultModel extends AbstractModel{
         firePropertyChange(DefaultController.MOVE_CHOSEN,null, board[y][x]);
         
         
-        if(p.getType().equals(Piece.KING)){
+        /*if(p.getType().equals(Piece.KING)){
             if(Logic.wasWestCastle(previousSpace,target)){
                 if(board[7][0].isOccupied()){
                     Piece castlePiece = board[7][0].getPiece();
@@ -248,7 +248,7 @@ public class DefaultModel extends AbstractModel{
             else if(Logic.wasEastCastle(previousSpace, target)){
                 //finish code
             }
-        }
+        }*/
         
         if(p.isUnmoved()){
             p.move();
@@ -358,14 +358,14 @@ public class DefaultModel extends AbstractModel{
     public static boolean isCheck(Coordinate coord, HashMap<String,ArrayList<Coordinate>> opponentMoves){
         boolean check = false;
         
-        for(HashMap.Entry<String, ArrayList<Coordinate>> e: opponentMoves.entrySet()){
+        /*for(HashMap.Entry<String, ArrayList<Coordinate>> e: opponentMoves.entrySet()){
             ArrayList<Coordinate> moves = e.getValue();
             
             for(Coordinate c : moves){
                 if(c.equals(coord))
                     check = true;
             }
-        }
+        }*/
         return check;
     }
     

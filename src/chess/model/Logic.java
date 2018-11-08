@@ -558,7 +558,7 @@ public class Logic {
         }
         //North East Search
         if(DefaultModel.validSpace(x + 1, y - 1)){
-            Coordinate northEastCoord = new Coordinate(x + 1, y + 1);
+            Coordinate northEastCoord = new Coordinate(x + 1, y - 1);
             if(board[y - 1][x + 1].isNotOccupied()){
                 if(!DefaultModel.isCheck(northEastCoord, opponentMoves))
                     possibleMoves.add(northEastCoord);
@@ -599,10 +599,10 @@ public class Logic {
             }
         }
         
-        if(westCastleAvailable(board,k,opponentMoves)){
+        /*if(westCastleAvailable(board,k,opponentMoves)){
             Coordinate castling = new Coordinate(2,7);
             possibleMoves.add(castling);
-        }
+        }*/
         
         return possibleMoves;
     }
