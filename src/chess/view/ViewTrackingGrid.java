@@ -62,9 +62,9 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     private ImageIcon blackQueen;
     private ImageIcon blackPawn;
     
-    //private GridLabel[][] grid;
-    private ArrayList<ArrayList<GridLabel>> labels;
-    private GridLabel selectedSpace;
+
+    private ArrayList<ArrayList<GridButton>> labels;
+    private GridButton selectedSpace;
     
     public ViewTrackingGrid(DefaultController controller) {
         super();
@@ -75,9 +75,8 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         
         selectedSpace = null;
         
-        //beige = new Color(239,227,178);
+
         beige = new Color(200,150,80);
-       // brown = new Color(150,94,62);
         brown = new Color(150,94,62);
         green = new Color(122,217,149);
         
@@ -87,18 +86,16 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     private void initComponents(){
         
         this.setLayout(new GridLayout(DefaultModel.MAX_SQUARE,DefaultModel.MAX_SQUARE));
-        this.setBackground(Color.BLACK);
-        //grid = new GridLabel[DefaultModel.MAX_SQUARE][DefaultModel.MAX_SQUARE];
+        
         labels = new ArrayList();
-        ArrayList<GridLabel> row;
-        GridLabel label;
-        JPanel panel;
+        ArrayList<GridButton> row;
+        GridButton label;
         
         for(int i = 0; i < DefaultModel.MAX_SQUARE; ++i){
             row = new ArrayList();
             for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
-                panel = new JPanel();
-                label = new GridLabel(this,j,i);
+                label = new GridButton(this,j,i);
+                label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
                 if((i%2)==(j%2)){
                     label.setBackground(brown);
                     label.setDefaultColor(brown);
@@ -111,12 +108,11 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
                 label.addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent e) {
-                        selectSquare((GridLabel)(e.getSource()));
+                        selectSquare((GridButton)(e.getSource()));
                     }
                     
                 });
-                panel.add(label);
-                this.add(panel);
+                this.add(label);
                 row.add(label);
                 
             }
@@ -145,7 +141,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         
         blackPawn = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_PAWN + PNG));
         blackRook = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_ROOK + PNG));
-        blackKnight = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_ROOK + PNG));
+        blackKnight = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_KNIGHT + PNG));
         blackBishop = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_BISHOP + PNG));
         blackQueen = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_QUEEN + PNG));
         blackKing = new ImageIcon(getClass().getResource(ICON_ROOT + BLACK_KING + PNG));
@@ -159,9 +155,9 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         
     }
     
-    private void selectSquare(GridLabel label){
-        Coordinate c = label.getCoordinate();
-        
+    private void selectSquare(GridButton label){
+        Coordinate c = label.getGridCoordinate();
+        boolean empty = (label.getIcon() == null);
         if(squareSelected){
             
             if(label.getBackground().equals(green)){
@@ -171,15 +167,20 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
                 controller.moveChosen(c);
             }
             else{
-                selectedSpace = label;
-                revertColor();
-                controller.squareSelected(c);
+                if(!empty){
+                   selectedSpace = label;
+                    revertColor();
+                    controller.squareSelected(c); 
+                }
+                
             }
         }
         else{
-            selectedSpace = label;
-            squareSelected = true;
-            controller.squareSelected(c);
+            if(!empty){
+                selectedSpace = label;
+                squareSelected = true;
+                controller.squareSelected(c);
+            }
         }
         
         
@@ -187,10 +188,10 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     }
     private void revertColor(){
         for(int i = 0; i < labels.size();++i){
-            ArrayList<GridLabel> row = labels.get(i);
+            ArrayList<GridButton> row = labels.get(i);
             
             for(int j = 0; j < row.size(); ++j){
-                GridLabel label = row.get(j);
+                GridButton label = row.get(j);
                 
                 if(label.getBackground().equals(green)){
                     label.setBackground(label.getDefaultColor());
@@ -241,7 +242,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
                 int x = move.getX();
                 int y = move.getY();
                 
-                GridLabel label = labels.get(y).get(x);
+                GridButton label = labels.get(y).get(x);
                 label.setBackground(green);
             }
         }

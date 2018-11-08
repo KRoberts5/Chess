@@ -15,15 +15,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import chess.model.Coordinate;
 
-public class GridLabel extends JLabel{
+public class GridButton extends JButton{
     
     private final Coordinate COORDINATE;
     private static final int WIDTH = 64;
     private Color defaultColor;
     
-    public GridLabel(AbstractView parent, int x, int y) {
+    public GridButton(AbstractView parent, int x, int y) {
         
-        super("", SwingConstants.CENTER);
+        super("");
         
         
         this.COORDINATE = new Coordinate(x,y);
@@ -32,7 +32,7 @@ public class GridLabel extends JLabel{
         /* Initialize JLabel Properties */
         
         this.setPreferredSize(new Dimension(WIDTH, WIDTH));
-        this.setForeground(Color.WHITE);
+        //this.setForeground(Color.WHITE);
         this.setOpaque(true);
         this.setVisible(true);
         
@@ -44,13 +44,13 @@ public class GridLabel extends JLabel{
     public Color getDefaultColor(){
         return this.defaultColor;
     }
-    public Coordinate getCoordinate(){
+    public Coordinate getGridCoordinate(){
         return this.COORDINATE;
     }
-    public int getX(){
+    public int getGridX(){
         return this.COORDINATE.getX();
     }
-    public int getY(){
+    public int getGridY(){
         return this.COORDINATE.getY();
     }
 }
