@@ -36,6 +36,8 @@ public class DefaultModel extends AbstractModel{
     private ArrayList<Piece> blackPieces;
     private HashMap<String,ArrayList<Coordinate>> blackPossibleMoves;
     
+    private Piece selectedPiece;
+    
     public DefaultModel(){
         gameOver = false;
         stalemate = false;
@@ -49,6 +51,8 @@ public class DefaultModel extends AbstractModel{
         
         whitePieces = whitePlayer.getPieces();
         blackPieces = blackPlayer.getPieces();
+        
+        selectedPiece = null;
 
     }
     
@@ -137,8 +141,38 @@ public class DefaultModel extends AbstractModel{
         else
             pvp = false;
     }
+    public void squareSelected(Coordinate c){
+        int x = c.getX();
+        int y = c.getY();
+        
+        Piece piece = board[y][x].getPiece();
+        
+        String color = piece.getColor();
+        String playerColor;
+        if(whitePlayerTurn)
+            playerColor = WHITE;
+        else
+            playerColor = BLACK;
+        
+        if(color.equals(playerColor)){
+            selectedPiece = piece;
+            String pieceName = piece.getName();
+            ArrayList<Coordinate> moves = new ArrayList();
+            if(whitePlayerTurn)
+                moves = whitePossibleMoves.get(pieceName);
+            else
+                moves = blackPossibleMoves.get(pieceName);
+            
+            if(!moves.isEmpty())
+                firePropertyChange(DefaultController.VALID_SQUARE_CHOSEN,null,moves);
+        }
+        
+    }
     
-    public void moveChosen(Coordinate oldSpace, Coordinate newSpace){
+    public void setMoveChosen( Coordinate newSpace){
+        
+        Coordinate oldSpace = selectedPiece.getCoordinate();
+        
         int oldX = oldSpace.getX();
         int oldY = oldSpace.getY();
         
@@ -171,6 +205,8 @@ public class DefaultModel extends AbstractModel{
     
     public void movePiece(Piece p, int x, int y){
         
+        Coordinate oldCoord = p.getCoordinate();
+        
         boolean castling = false;
         Coordinate previousSpace = p.getCoordinate();
         Coordinate target = new Coordinate(x,y);
@@ -180,7 +216,7 @@ public class DefaultModel extends AbstractModel{
         
         board[prevY][prevX].unoccupy();
         
-        firePropertyChange(DefaultController.UNOCCUPY_SPACE,null,new Coordinate(prevX,prevY));
+        //firePropertyChange(DefaultController.UNOCCUPY_SPACE,null,new Coordinate(prevX,prevY));
         
         if(board[y][x].isOccupied()){
             Piece capturedPiece = board[y][x].getPiece();
@@ -194,7 +230,8 @@ public class DefaultModel extends AbstractModel{
         for(Piece blackPiece : blackPieces)
             this.updatePossibleMoves(blackPiece);
         
-        firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[y][x]);
+        firePropertyChange(DefaultController.MOVE_CHOSEN,oldCoord, p.getCoordinate());
+        
         
         if(p.getType().equals(Piece.KING)){
             if(Logic.wasWestCastle(previousSpace,target)){

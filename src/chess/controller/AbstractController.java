@@ -6,6 +6,8 @@
 package chess.controller;
 
 import chess.model.AbstractModel;
+import chess.model.Coordinate;
+import chess.model.DefaultModel;
 import chess.view.AbstractView;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -105,6 +107,24 @@ public abstract class AbstractController implements PropertyChangeListener {
             
         }
         
+    }
+    public void squareSelected(Coordinate c){
+        for(AbstractModel m: models){
+            try {
+                
+                if(m instanceof DefaultModel){
+                    Method method = m.getClass().getMethod("squareSelected",new Class[]{ c.getClass()});
+                    method.invoke(m, c);
+                }
+ 
+                
+ 
+            }
+            
+            catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
     }
  
 }

@@ -19,6 +19,7 @@ public class GridLabel extends JLabel{
     
     private final Coordinate COORDINATE;
     private static final int WIDTH = 64;
+    private Color defaultColor;
     
     public GridLabel(AbstractView parent, int x, int y) {
         
@@ -26,6 +27,7 @@ public class GridLabel extends JLabel{
         
         
         this.COORDINATE = new Coordinate(x,y);
+        this.defaultColor = Color.BLACK;
         
         /* Initialize JLabel Properties */
         
@@ -36,6 +38,12 @@ public class GridLabel extends JLabel{
         
     }
     
+    public void setDefaultColor(Color c){
+        this.defaultColor = c;
+    }
+    public Color getDefaultColor(){
+        return this.defaultColor;
+    }
     public Coordinate getCoordinate(){
         return this.COORDINATE;
     }
