@@ -355,6 +355,115 @@ public class Logic {
     public static ArrayList<Coordinate> possibleMoves(BoardSpace[][] board,Knight k){
         ArrayList<Coordinate> possibleMoves = new ArrayList();
         
+        String color = k.getColor();
+        
+        int x = k.getCoordinate().getX();
+        int y = k.getCoordinate().getY();
+        
+        //Check Positions to the West
+        if(DefaultModel.validSpace(x - 2, y - 1)){
+            BoardSpace space = board[y-1][x-2];
+            Coordinate coord = new Coordinate(x - 2, y - 1);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        if(DefaultModel.validSpace(x - 2, y + 1)){
+            BoardSpace space = board[y+1][x-2];
+            Coordinate coord = new Coordinate(x - 2, y + 1);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        
+        //Check Positions to the East
+        if(DefaultModel.validSpace(x + 2, y - 1)){
+            BoardSpace space = board[y-1][x+2];
+            Coordinate coord = new Coordinate(x + 2, y - 1);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        if(DefaultModel.validSpace(x + 2, y + 1)){
+            BoardSpace space = board[y+1][x+2];
+            Coordinate coord = new Coordinate(x + 2, y + 1);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        
+        //Check Positions to the North
+        if(DefaultModel.validSpace(x - 1, y - 2)){
+            BoardSpace space = board[y-2][x-1];
+            Coordinate coord = new Coordinate(x - 1, y - 2);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        if(DefaultModel.validSpace(x + 1, y - 2)){
+            BoardSpace space = board[y-2][x+1];
+            Coordinate coord = new Coordinate(x + 1, y - 2);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        //Check Positions to the South
+        if(DefaultModel.validSpace(x - 1, y + 2)){
+            BoardSpace space = board[y+2][x-1];
+            Coordinate coord = new Coordinate(x - 1, y + 2);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        if(DefaultModel.validSpace(x + 1, y + 2)){
+            BoardSpace space = board[y+2][x+1];
+            Coordinate coord = new Coordinate(x + 1, y + 2);
+            if(space.isNotOccupied()){
+                possibleMoves.add(coord);
+            }
+            else{
+                if(!space.getPiece().getColor().equals(color)){
+                    possibleMoves.add(coord);
+                }
+            }
+        }
+        
+        
         
         
         return possibleMoves;
