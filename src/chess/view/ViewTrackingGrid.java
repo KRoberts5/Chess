@@ -161,7 +161,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     
     private void selectSquare(GridLabel label){
         Coordinate c = label.getCoordinate();
-        selectedSpace = label;
+        
         if(squareSelected){
             
             if(label.getBackground().equals(green)){
@@ -171,11 +171,13 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
                 controller.moveChosen(c);
             }
             else{
+                selectedSpace = label;
                 revertColor();
                 controller.squareSelected(c);
             }
         }
         else{
+            selectedSpace = label;
             squareSelected = true;
             controller.squareSelected(c);
         }
@@ -213,21 +215,22 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
         }
         
         if(e.getPropertyName().equals(DefaultController.MOVE_CHOSEN)){
-            
             squareSelected = false;
             whitePlayerTurn = !whitePlayerTurn;
             
-            int oldX = ((Coordinate)e.getOldValue()).getX(); 
-            int oldY = ((Coordinate)e.getOldValue()).getY();
-            int newX = ((Coordinate)e.getNewValue()).getX();
-            int newY = ((Coordinate)e.getNewValue()).getY();
+            int x = ((BoardSpace)e.getNewValue()).getCoordinate().getX();
+            int y = ((BoardSpace)e.getNewValue()).getCoordinate().getY();
+            String pieceType = ((BoardSpace)e.getNewValue()).getPiece().getType().toUpperCase();
+            String color = ((BoardSpace)e.getNewValue()).getPiece().getColor().toUpperCase();
             
-            ImageIcon piece = (ImageIcon)labels.get(oldY).get(oldX).getIcon();
-            //labels.get(oldY).get(oldX).setIcon(null);
+            String imageType = color.toLowerCase() + "_" + pieceType.toLowerCase();
+            ImageIcon image = images.get(imageType);
+            labels.get(y).get(x).setIcon(image);
             
-            labels.get(newY).get(newX).setIcon(piece);
-            
-            //labels.get(y).get(x).setIcon(null);
+            if(selectedSpace != null){
+                selectedSpace.setIcon(null);
+                selectedSpace = null;
+            }
         }
         
         if(e.getPropertyName().equals(DefaultController.VALID_SQUARE_CHOSEN)){

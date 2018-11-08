@@ -205,6 +205,8 @@ public class DefaultModel extends AbstractModel{
     
     public void movePiece(Piece p, int x, int y){
         
+        
+        
         Coordinate oldCoord = p.getCoordinate();
         
         boolean castling = false;
@@ -230,7 +232,9 @@ public class DefaultModel extends AbstractModel{
         for(Piece blackPiece : blackPieces)
             this.updatePossibleMoves(blackPiece);
         
-        firePropertyChange(DefaultController.MOVE_CHOSEN,oldCoord, p.getCoordinate());
+        
+        
+        firePropertyChange(DefaultController.MOVE_CHOSEN,null, board[y][x]);
         
         
         if(p.getType().equals(Piece.KING)){
