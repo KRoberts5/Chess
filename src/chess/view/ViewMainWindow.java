@@ -31,6 +31,15 @@ public class ViewMainWindow extends JFrame implements AbstractView{
     }
     
     public void modelPropertyChange(PropertyChangeEvent e){
-        
+        if(e.getPropertyName().equals(DefaultController.GAME_OVER_WHITE_WON) ||  e.getPropertyName().equals(DefaultController.GAME_OVER_BLACK_WON)){
+            String playerColor = "";
+            if(e.getPropertyName().equals(DefaultController.GAME_OVER_WHITE_WON))
+                playerColor = "White";
+            else
+                playerColor = "Black";
+            
+            JOptionPane.showMessageDialog(this, "Congratulations " + playerColor + " Player "  + "!\n\nYou Won the Game!");
+            this.dispose();
+        }
     }
 }
