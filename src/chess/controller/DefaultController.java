@@ -21,6 +21,9 @@ public class DefaultController extends AbstractController {
     public static final String MOVE_CHOSEN = "MoveChosen";
     public static final String CAPTURE_WHITE_PIECE = "CaptureWhitePiece";
     public static final String CAPTURE_BLACK_PIECE = "CaptureBlackPiece";
+    public static final String SELECT_PIECE = "SelectPiece";
+    public static final String DESELECT_PIECE = "DeselectPiece";
+    public static final String SHOW_POSSIBLE_MOVES = "ShowPossibleMoves";
     
     public static final String BLACK_TURN = "blackTurn";
     public static final String WHITE_TURN = "whiteTurn";

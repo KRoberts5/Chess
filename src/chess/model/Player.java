@@ -3,17 +3,17 @@ package chess.model;
 
 
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
     
     private String color;
-    private ArrayList<Piece> pieces;
+    private HashMap<String,Piece> pieces;
     private King king;
     
     public Player(String color){
         this.color = color;
-        pieces = new ArrayList();
+        pieces = new HashMap();
         this.initializePieces();
     }
 
@@ -36,21 +36,25 @@ public class Player {
         for(int i = rowMin; i < rowMax; ++i){
             for(int j = 0; j < DefaultModel.MAX_SQUARE; ++j){
                 
-                    if(i == pawnRow)
-                        pieces.add(new Pawn(this.color,(this.color + (j+1)),j,i));
+                    if(i == pawnRow){
+                        String name = (this.color + (j+1));
+                        pieces.put(name,new Pawn(this.color,name,j,i));
+                    }
                     else{
                         String name = this.color + (j + 1 + DefaultModel.MAX_SQUARE);
+
+
                         if((j == 0) || (j == 7))
-                            pieces.add(new Rook(this.color,name,j,i));
+                            pieces.put(name,new Rook(this.color,name,j,i));
                         else if((j == 1) || (j == 6))
-                            pieces.add(new Knight(this.color,name,j,i));
+                            pieces.put(name,new Knight(this.color,name,j,i));
                         else if((j == 2) || (j == 5))
-                            pieces.add(new Bishop(this.color,name,j,i));
+                            pieces.put(name,new Bishop(this.color,name,j,i));
                         else if(j == 3)
-                            pieces.add(new Queen(this.color,name,j,i));
+                            pieces.put(name,new Queen(this.color,name,j,i));
                         else if(j == 4){
                             king = new King(this.color,name,j,i);
-                            pieces.add(king);
+                            pieces.put(name,king);
                         }
                             
                     }
@@ -60,7 +64,7 @@ public class Player {
         }
     }
     
-    public ArrayList<Piece> getPieces(){
+    public HashMap<String,Piece> getPieces(){
         return this.pieces;
     }
     public King getKing(){

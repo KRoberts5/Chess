@@ -45,10 +45,24 @@ public class ArtificialIntelligence  {
                 else{
                     Double currentValue = (Double)primeMove.get(VALUE);
                     if(value > currentValue){
+                        primeMove.put(NAME, e.getKey());
                         primeMove.put(VALUE, value);
                         primeMove.put(e.getKey(), c);
                     }
                 }
+            }
+        }
+        
+        for(HashMap<String,Object> h: primeMoves){
+            
+            
+            if(chosenMove.isEmpty())
+                chosenMove = h;
+            else{
+                Double value = (Double)h.get(VALUE);
+                Double chosenValue = (Double)chosenMove.get(VALUE);
+                if(value>chosenValue)
+                    chosenMove = h;
             }
         }
         

@@ -157,31 +157,7 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
     
     private void selectSquare(GridButton label){
         Coordinate c = label.getGridCoordinate();
-        boolean empty = (label.getIcon() == null);
-        if(squareSelected){
-            
-            if(label.getBackground().equals(green)){
-                revertColor();
-                squareSelected = false;
-                
-                controller.moveChosen(c);
-            }
-            else{
-                if(!empty){
-                   selectedSpace = label;
-                    revertColor();
-                    controller.squareSelected(c); 
-                }
-                
-            }
-        }
-        else{
-            if(!empty){
-                selectedSpace = label;
-                squareSelected = true;
-                controller.squareSelected(c);
-            }
-        }
+        controller.squareSelected(c);
         
         
         
@@ -228,13 +204,21 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
             ImageIcon image = images.get(imageType);
             labels.get(y).get(x).setIcon(image);
             
+            Coordinate oldCoord = (Coordinate)e.getOldValue();
+            
+            int oldX = oldCoord.getX();
+            int oldY = oldCoord.getY();
+            
+            
+            
+            
             if(selectedSpace != null){
                 selectedSpace.setIcon(null);
                 selectedSpace = null;
             }
         }
         
-        if(e.getPropertyName().equals(DefaultController.VALID_SQUARE_CHOSEN)){
+        if(e.getPropertyName().equals(DefaultController.SHOW_POSSIBLE_MOVES)){
             ArrayList<Coordinate> possibleMoves = (ArrayList<Coordinate>)e.getNewValue();
             
             for(int i = 0; i < possibleMoves.size(); ++i){
@@ -245,6 +229,19 @@ public class ViewTrackingGrid extends JPanel implements AbstractView {
                 GridButton label = labels.get(y).get(x);
                 label.setBackground(green);
             }
+        }
+        if(e.getPropertyName().equals(DefaultController.DESELECT_PIECE)){
+            selectedSpace = null;
+            revertColor();
+        }
+        
+        if(e.getPropertyName().equals(DefaultController.SELECT_PIECE)){
+            Coordinate c = (Coordinate)e.getNewValue();
+            
+            int x = c.getX();
+            int y = c.getY();
+            
+            selectedSpace = labels.get(y).get(x);
         }
         
         

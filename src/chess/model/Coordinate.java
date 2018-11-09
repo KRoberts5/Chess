@@ -22,6 +22,16 @@ public class Coordinate {
     public int getY(){
         return this.y;
     }
+    
+    
+    public boolean equals(Coordinate c){
+        
+        int otherX = c.getX();
+        int otherY = c.getY();
+        
+        return (x == otherX) && (y == otherY);
+        
+    }
     public String toString(){
         String output = "";
         output += "X: " + x;
