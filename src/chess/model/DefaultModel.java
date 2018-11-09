@@ -45,7 +45,7 @@ public class DefaultModel extends AbstractModel{
         whitePlayerWon = false;
         blackPlayerWon = false;
         whitePlayerTurn = true;
-        pvp = true;
+        pvp = false;
         spaceSelected = false;
         
         this.whitePlayer = new Player(WHITE);
@@ -285,7 +285,21 @@ public class DefaultModel extends AbstractModel{
         String name = (String)decision.get(ArtificialIntelligence.NAME);
         Coordinate move = (Coordinate)decision.get(name);
         
+        System.out.println(name);
         
+        Piece p = blackPieces.get(name);
+        
+        selectedPiece = p;
+        spaceSelected = true;
+        firePropertyChange(DefaultController.SELECT_PIECE,null,p.getCoordinate());
+        
+        System.out.println("here");
+        
+        setMoveChosen(move);
+        
+        selectedPiece = null;
+        spaceSelected = false;
+        firePropertyChange(DefaultController.DESELECT_PIECE,null,null);
     }
     
     public void movePiece(Piece p, Coordinate c){
