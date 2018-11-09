@@ -25,7 +25,7 @@ public class DefaultModel extends AbstractModel{
     private boolean pvp;
     private boolean spaceSelected;
     
-    private String PVP = "PVP";
+    public static final String PVP = "PVP";
     
     
     private BoardSpace[][] board;
@@ -58,7 +58,15 @@ public class DefaultModel extends AbstractModel{
 
     }
     
-    public void initDefaults(){
+    public void setGameStart(String gameType){
+        
+        
+        this.initDefaults();
+        this.setGameType(gameType);
+        firePropertyChange(DefaultController.GAME_START,null,null);
+    }
+    
+    private void initDefaults(){
         this.initBoard();
         this.initStartingPossibleMoves();
     }

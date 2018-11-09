@@ -24,6 +24,7 @@ public class DefaultController extends AbstractController {
     public static final String SELECT_PIECE = "SelectPiece";
     public static final String DESELECT_PIECE = "DeselectPiece";
     public static final String SHOW_POSSIBLE_MOVES = "ShowPossibleMoves";
+    public static final String GAME_START = "GameStart";
     
     public static final String BLACK_TURN = "blackTurn";
     public static final String WHITE_TURN = "whiteTurn";
@@ -34,6 +35,9 @@ public class DefaultController extends AbstractController {
     
     public void moveChosen(Coordinate c){
         setModelProperty(MOVE_CHOSEN,c);
+    }
+    public void startGame(String gameType){
+        this.setModelProperty(GAME_START, gameType);
     }
     
 }
