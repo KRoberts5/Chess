@@ -23,6 +23,7 @@ public class DefaultModel extends AbstractModel{
     private boolean blackPlayerWon;
     private boolean whitePlayerTurn;
     private boolean pvp;
+    private boolean spaceSelected;
     
     private String PVP = "PVP";
     
@@ -31,9 +32,9 @@ public class DefaultModel extends AbstractModel{
     private Player whitePlayer;
     private Player blackPlayer;
     
-    private ArrayList<Piece> whitePieces;
+    private HashMap<String,Piece> whitePieces;
     private HashMap<String,ArrayList<Coordinate>> whitePossibleMoves;
-    private ArrayList<Piece> blackPieces;
+    private HashMap<String,Piece> blackPieces;
     private HashMap<String,ArrayList<Coordinate>> blackPossibleMoves;
     
     private Piece selectedPiece;
@@ -45,6 +46,7 @@ public class DefaultModel extends AbstractModel{
         blackPlayerWon = false;
         whitePlayerTurn = true;
         pvp = true;
+        spaceSelected = false;
         
         this.whitePlayer = new Player(WHITE);
         this.blackPlayer = new Player(BLACK);
@@ -71,13 +73,15 @@ public class DefaultModel extends AbstractModel{
             }
         }
         
-        for(Piece p: whitePieces){
+        for(HashMap.Entry<String,Piece> e: whitePieces.entrySet()){
+            Piece p = e.getValue();
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
             board[y][x].occupy(p);
             firePropertyChange(DefaultController.OCCUPY_SPACE,null,board[y][x]);
         }
-        for(Piece p : blackPieces){
+        for(HashMap.Entry<String,Piece> e: blackPieces.entrySet()){
+            Piece p = e.getValue();
             int x = p.getCoordinate().getX();
             int y = p.getCoordinate().getY();
             board[y][x].occupy(p);
@@ -85,15 +89,18 @@ public class DefaultModel extends AbstractModel{
         }
     }
     private void initStartingPossibleMoves(){
+        
         whitePossibleMoves = new HashMap();
-        for(Piece p: whitePieces){
+        for(HashMap.Entry<String,Piece> e: whitePieces.entrySet()){
+            Piece p = e.getValue();
             String name = p.getName();
             ArrayList<Coordinate> moves = Logic.possibleMoves(this.board,p);
             whitePossibleMoves.put(name, moves);
         }
         
         blackPossibleMoves = new HashMap();
-        for(Piece p : blackPieces){
+        for(HashMap.Entry<String,Piece> e: blackPieces.entrySet()){
+            Piece p = e.getValue();
             String name = p.getName();
             ArrayList<Coordinate> moves = Logic.possibleMoves(this.board,p);
             blackPossibleMoves.put(name, moves);
@@ -145,28 +152,102 @@ public class DefaultModel extends AbstractModel{
         int x = c.getX();
         int y = c.getY();
         
-        Piece piece = board[y][x].getPiece();
+        if(spaceSelected){
+            if(this.possibleMoveOfSelectedPiece(c)){
+                
+                setMoveChosen(c);
+                spaceSelected = false;
+                selectedPiece = null;
+                firePropertyChange(DefaultController.DESELECT_PIECE,null,null);
+            }
+            else if(board[y][x].isOccupied()){
+                
+                selectedPiece = null;
+                spaceSelected = false;
+                firePropertyChange(DefaultController.DESELECT_PIECE,null,null);
+                
+                Piece p = board[y][x].getPiece();
+                String name = p.getName();
+                String pieceColor = p.getColor();
+                String playerColor = "";
+                
+                if(whitePlayerTurn)
+                    playerColor = WHITE;
+                else
+                    playerColor = BLACK;
+                
+                if(pieceColor.equals(playerColor)){
+                    selectedPiece = p;
+                    spaceSelected = true;
+                    firePropertyChange(DefaultController.SELECT_PIECE,null,c);
+                    
+                    if(whitePlayerTurn){
+                        ArrayList<Coordinate> moves = whitePossibleMoves.get(name);
+                        firePropertyChange(DefaultController.SHOW_POSSIBLE_MOVES,null, moves);
+                    }
+                    else{
+                        ArrayList<Coordinate> moves = blackPossibleMoves.get(name);
+                        firePropertyChange(DefaultController.SHOW_POSSIBLE_MOVES,null, moves);
+                    }
+                }
+                
+            }
+            else{
+                selectedPiece = null;
+                spaceSelected = false;
+                firePropertyChange(DefaultController.DESELECT_PIECE,null,null);
+            }
+        }
+        else{
+            if(board[y][x].isOccupied()){
+                Piece p = board[y][x].getPiece();
+                String name = p.getName();
+                String pieceColor = p.getColor();
+                String playerColor = "";
+                
+                if(whitePlayerTurn)
+                    playerColor = WHITE;
+                else
+                    playerColor = BLACK;
+                
+                if(pieceColor.equals(playerColor)){
+                    selectedPiece = p;
+                    spaceSelected = true;
+                    firePropertyChange(DefaultController.SELECT_PIECE,null,c);
+                    
+                    if(whitePlayerTurn){
+                        ArrayList<Coordinate> moves = whitePossibleMoves.get(name);
+                        firePropertyChange(DefaultController.SHOW_POSSIBLE_MOVES,null, moves);
+                    }
+                    else{
+                        ArrayList<Coordinate> moves = blackPossibleMoves.get(name);
+                        firePropertyChange(DefaultController.SHOW_POSSIBLE_MOVES,null, moves);
+                    }
+                }
+            }
+        }
+    }
+    private boolean possibleMoveOfSelectedPiece(Coordinate c){
         
-        String color = piece.getColor();
-        String playerColor;
-        if(whitePlayerTurn)
-            playerColor = WHITE;
+        boolean possibleMove = false;
+        
+        String name = selectedPiece.getName();
+        String color = selectedPiece.getColor();
+        ArrayList<Coordinate> moves = new ArrayList();
+        
+        if(color.equals(WHITE))
+            moves = whitePossibleMoves.get(name);
         else
-            playerColor = BLACK;
+            moves = blackPossibleMoves.get(name);
         
-        if(color.equals(playerColor)){
-            selectedPiece = piece;
-            String pieceName = piece.getName();
-            ArrayList<Coordinate> moves = new ArrayList();
-            if(whitePlayerTurn)
-                moves = whitePossibleMoves.get(pieceName);
-            else
-                moves = blackPossibleMoves.get(pieceName);
+        for(Coordinate move : moves){
             
-            if(!moves.isEmpty())
-                firePropertyChange(DefaultController.VALID_SQUARE_CHOSEN,null,moves);
+            if(move.equals(c)){
+                possibleMove = true;
+            }
         }
         
+        return possibleMove;
     }
     
     public void setMoveChosen( Coordinate newSpace){
@@ -193,7 +274,18 @@ public class DefaultModel extends AbstractModel{
         
         if(!pvp && !whitePlayerTurn){
             //Get AI decision
+            
+            this.computerTurn();
         }
+    }
+    
+    private void computerTurn(){
+        HashMap<String,Object> decision = ArtificialIntelligence.getDecision(board, whitePlayer, blackPossibleMoves, whitePossibleMoves);
+        
+        String name = (String)decision.get(ArtificialIntelligence.NAME);
+        Coordinate move = (Coordinate)decision.get(name);
+        
+        
     }
     
     public void movePiece(Piece p, Coordinate c){
@@ -218,8 +310,6 @@ public class DefaultModel extends AbstractModel{
         
         board[prevY][prevX].unoccupy();
         
-        //firePropertyChange(DefaultController.UNOCCUPY_SPACE,null,new Coordinate(prevX,prevY));
-        
         if(board[y][x].isOccupied()){
             Piece capturedPiece = board[y][x].getPiece();
             this.capturePiece(capturedPiece);  
@@ -227,14 +317,14 @@ public class DefaultModel extends AbstractModel{
         p.setCoordinate(x, y);
         board[y][x].occupy(p);
         
-        for(Piece whitePiece : whitePieces)
-            this.updatePossibleMoves(whitePiece);
-        for(Piece blackPiece : blackPieces)
-            this.updatePossibleMoves(blackPiece);
+        for(HashMap.Entry<String,Piece> e: whitePieces.entrySet())
+            this.updatePossibleMoves(e.getValue());
+        for(HashMap.Entry<String,Piece> e: blackPieces.entrySet())
+            this.updatePossibleMoves(e.getValue());
         
         
         
-        firePropertyChange(DefaultController.MOVE_CHOSEN,null, board[y][x]);
+        firePropertyChange(DefaultController.MOVE_CHOSEN,oldCoord, board[y][x]);
         
         
         /*if(p.getType().equals(Piece.KING)){
@@ -260,12 +350,12 @@ public class DefaultModel extends AbstractModel{
         String color = p.getColor();
         
         if(color.equals(WHITE)){
-            whitePieces.remove(p);
+            whitePieces.remove(name);
             whitePossibleMoves.remove(name);
             firePropertyChange(DefaultController.CAPTURE_WHITE_PIECE,null,p);
         }
         else{
-            blackPieces.remove(p);
+            blackPieces.remove(name);
             blackPossibleMoves.remove(name);
             firePropertyChange(DefaultController.CAPTURE_BLACK_PIECE,null,p);
         }
@@ -303,12 +393,12 @@ public class DefaultModel extends AbstractModel{
         boolean whiteKing = false;
         boolean blackKing = false;
 
-        for(Piece p : whitePieces){
-            if(p instanceof King)
+        for(HashMap.Entry<String,Piece> e: whitePieces.entrySet()){
+            if(e.getValue() instanceof King)
                 whiteKing = true;
         }
-        for(Piece p: blackPieces){
-            if(p instanceof King)
+        for(HashMap.Entry<String,Piece> e: blackPieces.entrySet()){
+            if(e.getValue() instanceof King)
                 blackKing = true;
         }
         
@@ -325,32 +415,26 @@ public class DefaultModel extends AbstractModel{
     }
     public boolean movesLeft(){
         boolean movesLeft = false;
-        int whiteCount = 0;
-        int blackCount = 0;
         
-        int whitePieceCount = whitePieces.size();
-        int blackPieceCount = blackPieces.size();
-        
-        while(((whiteCount < whitePieceCount) && (blackCount < blackPieceCount)) && !movesLeft){
+        for(HashMap.Entry<String,Piece> e: whitePieces.entrySet()){
+            Piece p = e.getValue();
+            ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
             
-            if(whiteCount < whitePieceCount){
-                Piece p = whitePieces.get(whiteCount);
-                ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
-            
-                if(possibleMoves.size() > 0)
-                    movesLeft = true;
-            }
-            if(blackCount < blackPieceCount){
-                Piece p = blackPieces.get(whiteCount);
-                ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
-            
-                if(possibleMoves.size() > 0)
-                    movesLeft = true;
-            }
-            
-            ++whiteCount;
-            ++blackCount;
+            if(possibleMoves.size() > 0)
+                movesLeft = true;
+            if(movesLeft)
+                break;
         }
+        for(HashMap.Entry<String,Piece> e: blackPieces.entrySet()){
+            Piece p = e.getValue();
+            ArrayList<Coordinate> possibleMoves = getPossibleMoves(p);
+            
+            if(possibleMoves.size() > 0)
+                movesLeft = true;
+            if(movesLeft)
+                break;
+        }
+        
         
         return movesLeft;
     }
