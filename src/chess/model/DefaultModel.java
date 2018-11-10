@@ -60,8 +60,6 @@ public class DefaultModel extends AbstractModel{
     }
     
     public void setGameStart(String gameType){
-        
-        System.out.println(gameType);
         this.initDefaults();
         this.setGameType(gameType);
         firePropertyChange(DefaultController.GAME_START,null,null);
@@ -294,15 +292,10 @@ public class DefaultModel extends AbstractModel{
         String name = (String)decision.get(ArtificialIntelligence.NAME);
         Coordinate move = (Coordinate)decision.get(name);
         
-        System.out.println(name);
-        
         Piece p = blackPieces.get(name);
-        
         selectedPiece = p;
         spaceSelected = true;
         firePropertyChange(DefaultController.SELECT_PIECE,null,p.getCoordinate());
-        
-        System.out.println("here");
         
         setMoveChosen(move);
         

@@ -41,11 +41,13 @@ public class ViewStartMenu extends JPanel implements AbstractView{
         this.setBackground(Color.WHITE);
         
         decision = new JLabel("AI");
+        decision.setHorizontalTextPosition(SwingConstants.CENTER);
+       
         
         JPanel decisionPanel = new JPanel();
-        decisionPanel.setLayout(new BorderLayout());
-        decisionPanel.add(decision,BorderLayout.CENTER);
-        
+        decisionPanel.setLayout(new FlowLayout());
+        //decisionPanel.add(decision,BorderLayout.CENTER);
+        decisionPanel.add(decision);
         this.add(decisionPanel);
         
 
@@ -102,8 +104,6 @@ public class ViewStartMenu extends JPanel implements AbstractView{
     
     
     public void setGameType(String gameType){
-        
-        System.out.println(gameType);
         this.gameType = gameType;
         this.decision.setText(gameType);
     }

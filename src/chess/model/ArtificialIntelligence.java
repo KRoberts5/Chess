@@ -33,26 +33,18 @@ public class ArtificialIntelligence  {
             
             ArrayList<Coordinate> moves = e.getValue();
             
-            //System.out.println(e.getKey());
-            
             for(Coordinate c : moves){
                 Double value = calculateMoveValue(c,whiteKingSpace,board,blackMoves,whiteMoves);
-                //System.out.println(value);
                 if(primeMove.isEmpty()){
-                    
                     primeMove.put(NAME, e.getKey());
                     primeMove.put(VALUE, value);
                     primeMove.put(e.getKey(), c);
-                    
-                    
                 }
                 else{
                     Double currentValue = (Double)primeMove.get(VALUE);
                     if(value > currentValue){
-                        
                         primeMove.put(VALUE, value);
                         primeMove.put(e.getKey(), c);
-                       // System.out.println(primeMove.get(VALUE));
                     }
                 }
             }
@@ -61,27 +53,16 @@ public class ArtificialIntelligence  {
         }
         
         for(HashMap<String,Object> h: primeMoves){
-            //System.out.println("Here");
             
             if(chosenMove.isEmpty())
                 chosenMove = h;
             else{
-                //System.out.println("Here");
                 Double value = (Double)h.get(VALUE);
-               // System.out.println(value);
                 Double chosenValue = (Double)chosenMove.get(VALUE);
-                //System.out.println(chosenValue);
                 if(value>chosenValue)
                     chosenMove = h;
             }
-            
         }
-        
-        for(HashMap.Entry<String,Object> e : chosenMove.entrySet()){
-            System.out.println(e.getValue());
-        }
-        
-        
         
         return chosenMove;
     }
